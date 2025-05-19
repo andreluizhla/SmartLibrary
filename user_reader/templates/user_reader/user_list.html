@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+    <h1>Teste página lista</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NOME</th>
+                <th>CPF</th>
+                <th>CGM</th>
+                <th>E-MAIL</th>
+                <th>TELEFONE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in user_list %}
+                <tr>
+                    <td> {{ user.pk }} </td>
+                    <td> {{ user.name }} </td>
+                    <td> {{ user.cpf }} </td>
+                    <td> {{ user.cgm }} </td>
+                    <td> {{ user.email }} </td>
+                    <td> {{ user.phone }} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <a href="{% url "user_create" %}">Criar Usuário</a>
+    </div>
+{% endblock main_content %}
