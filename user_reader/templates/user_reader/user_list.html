@@ -1,32 +1,43 @@
 {% extends "base.html" %}
+{% block title %}Lista de Usuários{% endblock title %}
 
 {% block main_content %}
-    <h1>Teste página lista</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>NOME</th>
-                <th>CPF</th>
-                <th>CGM</th>
-                <th>E-MAIL</th>
-                <th>TELEFONE</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in user_list %}
+    <h1>Lista de Usuários Cadastrados</h1>
+    {% if user_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm">
+            <thead>
                 <tr>
-                    <td> {{ user.pk }} </td>
-                    <td> {{ user.name }} </td>
-                    <td> {{ user.cpf }} </td>
-                    <td> {{ user.cgm }} </td>
-                    <td> {{ user.email }} </td>
-                    <td> {{ user.phone }} </td>
+                    {% comment %}<th scope="col">ID</th>{% endcomment %}
+                    <th scope="col">NOME</th>
+                    <th scope="col">CPF</th>
+                    <th scope="col">CGM</th>
+                    <th scope="col">E-MAIL</th>
+                    <th scope="col">TELEFONE</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for user in user_list %}
+                    <tr>
+                        {% comment %}
+                            <td scope="row"> {{ user.pk }} </td>
+                            user.pk = cpf
+                            logo não tem necessidade
+                        {% endcomment %}
+                        <td scope="row"> {{ user.name }} </td>
+                        <td scope="row"> {{ user.cpf }} </td>
+                        <td scope="row"> {{ user.cgm }} </td>
+                        <td scope="row"> {{ user.email }} </td>
+                        <td scope="row"> {{ user.phone }} </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Parece que não tem nada...</p>
+    {% endif %}
     <div>
-        <a href="{% url "user_create" %}">Criar Usuário</a>
+        <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm">Cadastrar Usuário</a>
     </div>
 {% endblock main_content %}
