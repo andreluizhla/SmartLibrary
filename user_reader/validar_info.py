@@ -5,6 +5,7 @@ def validate_name(value):
     pass
     # name = value
     # simbols_list = []
+    # veiricar se tem símbolos e números -> erro
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
@@ -42,6 +43,8 @@ def validate_cgm(value):
 
 
 def validate_phone(value):
+    # veiricar se tem símbolos e espaço -> erro
+
     phone = value
     print(phone)
     phone_without_letters = re.sub(r'[a-zA-Z]', '', value)
