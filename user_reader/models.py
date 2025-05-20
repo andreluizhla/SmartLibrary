@@ -62,7 +62,7 @@ class User(models.Model):
         if not self.email.endswith("@gmail.com") and not self.email.endswith(
             "@escola.pr.gov.br"
         ):
-            raise ValidationError({"email": "Email deve ser @gmail"})
+            raise ValidationError({"email": "Email deve ser @gmail ou @escola"})
 
     def cpf_formatted(self):
         cpf_limpo = re.sub(r"[^0-9]", "", self.cpf)
