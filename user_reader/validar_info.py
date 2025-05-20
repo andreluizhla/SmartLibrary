@@ -1,6 +1,10 @@
 import re
 from django.core.exceptions import ValidationError
 
+def validate_name(value):
+    pass
+    # name = value
+    # simbols_list = []
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
@@ -38,11 +42,18 @@ def validate_cgm(value):
 
 
 def validate_phone(value):
-    phone = re.sub(r"[^0-9]", "", value)
+    phone = value
+    print(phone)
+    phone_without_letters = re.sub(r'[a-zA-Z]', '', value)
+
+    print(phone)
+    print(phone_without_letters)
 
     if len(phone) not in (10, 11):
         raise ValidationError("Número deve conter 10 (fixo) ou 11 (celular) dígitos")
-
+    if phone != phone_without_letters:
+        raise ValidationError("Número deve conter apenas números")
+    
     ddd = phone[:2]
     number = phone[2:]
 
@@ -51,11 +62,6 @@ def validate_phone(value):
 
     if len(phone) == 11 and not number.startswith("9"):
         raise ValidationError("Celulares devem começar com 9 (ex: 9XXXX-XXXX)")
-
-    print(not phone.isdigit())
-    print(phone)
-    if not phone.isdigit():
-        raise ValidationError("Número deve conter apenas números")
 
 
 ddd_list = [

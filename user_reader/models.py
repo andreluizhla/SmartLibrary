@@ -2,7 +2,7 @@ import re
 from django.db import models
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from .validar_info import validate_cpf, validate_cgm, validate_phone
+from .validar_info import validate_name, validate_cpf, validate_cgm, validate_phone
 
 
 class User(models.Model):
@@ -11,6 +11,8 @@ class User(models.Model):
         max_length=100,
         null=False,
         blank=False,
+        validators=[validate_name],
+        unique=True,
         help_text="Esse nome ficará no banco de dados da Secretaria de Educação do Paraná",
     )
     cpf = models.CharField(
@@ -36,6 +38,7 @@ class User(models.Model):
         max_length=200,
         null=False,
         blank=False,
+        unique=True,
         validators=[validate_email],
         help_text="Use o @gmail ou o @escola",
     )
