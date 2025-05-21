@@ -2,7 +2,13 @@ import re
 from django.core.exceptions import ValidationError
 
 def validate_name(value):
+
+    name = value
+
+    if re.search(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]', name):
+        raise ValidationError("O nome na pode conter números ou símbolos")
     pass
+
     # name = value
     # simbols_list = []
     # veiricar se tem símbolos e números -> erro
@@ -10,6 +16,9 @@ def validate_name(value):
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
 
+    if not cpf.isdigit():
+        raise ValidationError("O CPF não pode conter símbolos.")
+    
     if len(cpf) != 11:
         raise ValidationError("CPF deve conter 11 dígitos")
 
@@ -52,6 +61,8 @@ def validate_phone(value):
     print(phone)
     print(phone_without_letters)
 
+    if not re.fullmatch(r'\d+', phone):
+        raise ValidationError("O número de telefone não pode conter espaços letras ou símbolos")
     if len(phone) not in (10, 11):
         raise ValidationError("Número deve conter 10 (fixo) ou 11 (celular) dígitos")
     if phone != phone_without_letters:
