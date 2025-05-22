@@ -70,6 +70,13 @@ def validate_phone(value):
     if len(phone) == 11 and not number.startswith("9"):
         raise ValidationError("Celulares devem começar com 9 (ex: 9XXXX-XXXX)")
 
+def validate_password(value):
+    password = value
+    
+    # mandei mensagem no grupo dos líderes, esperando o Squad Requisitos responder...
+    # if len(password) < 8:
+    #     raise ValidationError("Coloque uma senha com no mínimo 8 ")
+
 
 ddd_list = [
     11,
