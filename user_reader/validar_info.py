@@ -73,9 +73,8 @@ def validate_phone(value):
 def validate_password(value):
     password = value
     
-    # mandei mensagem no grupo dos líderes, esperando o Squad Requisitos responder...
-    # if len(password) < 8:
-    #     raise ValidationError("Coloque uma senha com no mínimo 8 ")
+    if len(password) < 8:
+        raise ValidationError("Coloque uma senha maior")
 
 
 ddd_list = [
