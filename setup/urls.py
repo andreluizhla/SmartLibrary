@@ -3,8 +3,20 @@ from django.urls import path
 
 from user_reader.views import UserReaderListView, UserReaderCreateView
 
+from collection_item.views import CollectionItemListView, CollectionItemCreateView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", UserReaderListView.as_view(), name="user_list"),
-    path("create/", UserReaderCreateView.as_view(), name="user_create")
+    path("create/", UserReaderCreateView.as_view(), name="user_create"),
+    path(
+        "collection-item/",
+        CollectionItemListView.as_view(),
+        name="collection_item_list",
+    ),
+    path(
+        "collection-item/create",
+        CollectionItemCreateView.as_view(),
+        name="collection_item_create",
+    ),
 ]

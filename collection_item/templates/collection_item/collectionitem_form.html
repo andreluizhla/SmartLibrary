@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Cadastro Item Acervo
+{% endblock title %}
+
+{% block main_content %}
+    <h1>Cadastro de Item de Acervo</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit">Enviar</button>
+    </form>
+{% endblock main_content %}
+
+{% comment %} HTTP MÉTODOS:
+POST : POSTA ALGO -> envia dados para o servidor
+GET : PEGA ALGO -> recebe dados do servidor
+{% endcomment %}

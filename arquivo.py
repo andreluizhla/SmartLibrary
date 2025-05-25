@@ -120,22 +120,22 @@
 # print(comprar_pao(1.6))
 
 
-class Cao:
-    def __init__(self, nome, comida, soneca):
-        self.nome = nome
-        self.comida = comida
-        self.soneca = soneca
+# class Cao:
+#     def __init__(self, nome, comida, soneca):
+#         self.nome = nome
+#         self.comida = comida
+#         self.soneca = soneca
 
-    def comer(self):
-        self.comida = self.comida - 1
-        print("O cão comeu!")
-        return self.comida
+#     def comer(self):
+#         self.comida = self.comida - 1
+#         print("O cão comeu!")
+#         return self.comida
 
-    def dormir(self):
-        if self.soneca == True:
-            self.soneca = False
-            print("O cão dormiu!")
-        return self.soneca
+#     def dormir(self):
+#         if self.soneca == True:
+#             self.soneca = False
+#             print("O cão dormiu!")
+#         return self.soneca
 
 
 # cao_1_nome = "José"
@@ -152,12 +152,17 @@ class Cao:
 
 # comer(cao_1_comida)
 
-cao_1 = Cao("José", 5, True)
-cao_2 = Cao("Maria", 2, False)
-cao_3 = Cao("Felipe", 10, False)
-cao_4 = Cao("Mauro", 3, True)
-cao_5 = Cao("Maísa", 5, True)
-cao_1.dormir()
-cao_2.comer()
-cao_3.comer()
-cao_4.dormir()
+# cao_1 = Cao("José", 5, True)
+# cao_2 = Cao("Maria", 2, False)
+# cao_3 = Cao("Felipe", 10, False)
+# cao_4 = Cao("Mauro", 3, True)
+# cao_5 = Cao("Maísa", 5, True)
+# cao_1.dormir()
+# cao_2.comer()
+# cao_3.comer()
+# cao_4.dormir()
+
+
+
+# Segunda Aula:
+

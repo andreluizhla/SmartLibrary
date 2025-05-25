@@ -6,6 +6,8 @@ from django.contrib import messages
 from .forms import UserForm
 from .models import User
 
+# def home(request):
+#     return render(request, )
 
 class UserReaderListView(ListView):
     model = User
