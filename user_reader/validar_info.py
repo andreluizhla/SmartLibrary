@@ -2,16 +2,10 @@ import re
 from django.core.exceptions import ValidationError
 
 def validate_name(value):
-
     name = value
 
     if re.search(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]', name):
-        raise ValidationError("O nome na pode conter números ou símbolos")
-    pass
-
-    # name = value
-    # simbols_list = []
-    # veiricar se tem símbolos e números -> erro
+        raise ValidationError("O nome não pode conter números ou símbolos")
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
@@ -49,22 +43,21 @@ def validate_cgm(value):
 
     if not cgm.isdigit():
         raise ValidationError("CGM deve contér apenas números")
+    
+    if cgm == cgm[0] * 10:
+        raise ValidationError("CGM inválido (dígitos repetidos)")
 
 
 def validate_phone(value):
-    # veiricar se tem símbolos e espaço -> erro
-
     phone = value
-    print(phone)
     phone_without_letters = re.sub(r'[a-zA-Z]', '', value)
 
-    print(phone)
-    print(phone_without_letters)
-
     if not re.fullmatch(r'\d+', phone):
-        raise ValidationError("O número de telefone não pode conter espaços letras ou símbolos")
+        raise ValidationError("O número de telefone não pode conter espaços, letras ou símbolos")
+    
     if len(phone) not in (10, 11):
         raise ValidationError("Número deve conter 10 (fixo) ou 11 (celular) dígitos")
+    
     if phone != phone_without_letters:
         raise ValidationError("Número deve conter apenas números")
     
@@ -76,6 +69,12 @@ def validate_phone(value):
 
     if len(phone) == 11 and not number.startswith("9"):
         raise ValidationError("Celulares devem começar com 9 (ex: 9XXXX-XXXX)")
+
+def validate_password(value):
+    password = value
+    
+    if len(password) < 8:
+        raise ValidationError("Coloque uma senha maior")
 
 
 ddd_list = [

@@ -2,7 +2,13 @@ import re
 from django.db import models
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from .validar_info import validate_name, validate_cpf, validate_cgm, validate_phone
+from .validar_info import (
+    validate_name,
+    validate_cpf,
+    validate_cgm,
+    validate_phone,
+    validate_password,
+)
 
 
 class User(models.Model):
@@ -48,13 +54,15 @@ class User(models.Model):
         validators=[validate_phone],
         help_text="Digite apenas números, sem pontuações ou espaços. Exemplo: Para (21) 99999-8888, digite 21999998888",
     )
-    # password = models.CharField(
-    #     verbose_name="Senha",
-    #     max_length=100,
-    #     null=False,
-    #     blank=False,
-    #     help_text="Coloque uma senha com no mínimo 8 caracteres",
-    # )
+    password = models.CharField(
+        verbose_name="Senha",
+        max_length=128,
+        null=False,
+        blank=False,
+        validators=[validate_password],
+        help_text="Coloque uma senha com no mínimo 8 caracteres",
+        # default="12345678"
+    )
 
     def clean_email(self):
         super().clean()

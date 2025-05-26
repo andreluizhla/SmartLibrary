@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = [
 
 MY_APPS = [
     "user_reader.apps.UserReaderConfig",
+    "collection_item.apps.CollectionItemConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
