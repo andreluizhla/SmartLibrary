@@ -41,7 +41,7 @@ class User(models.Model):
     )
     email = models.EmailField(
         verbose_name="E-mail",
-        max_length=200,
+        max_length=50,
         null=False,
         blank=False,
         unique=True,
@@ -61,16 +61,10 @@ class User(models.Model):
         blank=False,
         validators=[validate_password],
         help_text="Coloque uma senha com no mínimo 8 caracteres",
-        # default="12345678"
     )
 
     def clean_email(self):
         super().clean()
-
-        if not self.email.endswith("@gmail.com") and not self.email.endswith(
-            "@escola.pr.gov.br"
-        ):
-            raise ValidationError({"email": "Email deve ser @gmail ou @escola"})
 
     def cpf_formatted(self):
         cpf_limpo = re.sub(r"[^0-9]", "", self.cpf)
