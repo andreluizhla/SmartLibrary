@@ -1,18 +1,20 @@
 import re
 from django.core.exceptions import ValidationError
 
+
 def validate_name(value):
     name = value
 
-    if re.search(r'[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]', name):
+    if re.search(r"[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]", name):
         raise ValidationError("O nome não pode conter números ou símbolos")
+
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
 
     if not cpf.isdigit():
         raise ValidationError("O CPF não pode conter símbolos.")
-    
+
     if len(cpf) != 11:
         raise ValidationError("CPF deve conter 11 dígitos")
 
@@ -43,24 +45,32 @@ def validate_cgm(value):
 
     if not cgm.isdigit():
         raise ValidationError("CGM deve contér apenas números")
-    
+
     if cgm == cgm[0] * 10:
         raise ValidationError("CGM inválido (dígitos repetidos)")
 
 
+def validate_email(value):
+    email = value
+    if not email.endswith("@gmail.com") and not email.endswith("@escola.pr.gov.br"):
+        raise ValidationError("Email deve ser @gmail ou @escola")
+
+
 def validate_phone(value):
     phone = value
-    phone_without_letters = re.sub(r'[a-zA-Z]', '', value)
+    phone_without_letters = re.sub(r"[a-zA-Z]", "", value)
 
-    if not re.fullmatch(r'\d+', phone):
-        raise ValidationError("O número de telefone não pode conter espaços, letras ou símbolos")
-    
+    if not re.fullmatch(r"\d+", phone):
+        raise ValidationError(
+            "O número de telefone não pode conter espaços, letras ou símbolos"
+        )
+
     if len(phone) not in (10, 11):
         raise ValidationError("Número deve conter 10 (fixo) ou 11 (celular) dígitos")
-    
+
     if phone != phone_without_letters:
         raise ValidationError("Número deve conter apenas números")
-    
+
     ddd = phone[:2]
     number = phone[2:]
 
@@ -70,9 +80,10 @@ def validate_phone(value):
     if len(phone) == 11 and not number.startswith("9"):
         raise ValidationError("Celulares devem começar com 9 (ex: 9XXXX-XXXX)")
 
+
 def validate_password(value):
     password = value
-    
+
     if len(password) < 8:
         raise ValidationError("Coloque uma senha maior")
 
