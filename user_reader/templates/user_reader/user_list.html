@@ -8,7 +8,6 @@
         <table class="table table-striped table-hover table-sm">
             <thead>
                 <tr>
-                    {% comment %}<th scope="col">ID</th>{% endcomment %}
                     <th scope="col">NOME</th>
                     <th scope="col">CPF</th>
                     <th scope="col">CGM</th>
@@ -20,11 +19,6 @@
             <tbody>
                 {% for user in user_list %}
                     <tr>
-                        {% comment %}
-                            <td scope="row"> {{ user.pk }} </td>
-                            user.pk = cpf
-                            logo não tem necessidade
-                        {% endcomment %}
                         <td scope="row"> {{ user.name }} </td>
                         <td scope="row"> {{ user.cpf }} </td>
                         <td scope="row"> {{ user.cgm }} </td>
@@ -37,7 +31,7 @@
         </table>
     </div>
     {% else %}
-    <p>Parece que não tem nada...</p>
+        <p>Parece que não tem nada...</p>
     {% endif %}
     <div>
         <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm">Cadastrar Usuário</a>
