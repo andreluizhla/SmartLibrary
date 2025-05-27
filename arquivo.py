@@ -218,15 +218,15 @@ variavel = "93274890"
 
 # lista = ("letras", 9, True, None)
 
-dicionario = {
-    "item1": "valor1",
-    "item2": "valor2",
-    "item3": "valor3",
-    "item4": "valor4",
-}
+# dicionario = {
+#     "item1": "valor1",
+#     "item2": "valor2",
+#     "item3": "valor3",
+#     "item4": "valor4",
+# }
 
-for item in dicionario:
-    print(item)
+# for item in dicionario:
+#     print(item)
 
 # print(lista[-1])
 # lista -> [0, 1, 2, 3, 4, ...]
