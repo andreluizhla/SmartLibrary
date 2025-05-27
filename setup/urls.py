@@ -3,7 +3,7 @@ from django.urls import path
 
 from user_reader.views import UserReaderListView, UserReaderCreateView
 
-from collection_item.views import CollectionItemListView, CollectionItemCreateView
+from collection_item.views import CollectionItemListView, CollectionItemCreateView, CollectionItemDeleteView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -19,4 +19,5 @@ urlpatterns = [
         CollectionItemCreateView.as_view(),
         name="collection_item_create",
     ),
+    path("collection-item/delete/", CollectionItemDeleteView.as_view(), name="colletcion_item_delete")
 ]

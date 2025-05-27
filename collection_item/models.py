@@ -44,3 +44,5 @@ class CollectionItem(models.Model):
         null=False,
         blank=False,
     )
+
+    
