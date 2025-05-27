@@ -163,6 +163,75 @@
 # cao_4.dormir()
 
 
+# Terciera Aula:
 
-# Segunda Aula:
+
+# algo = "Algo"
+
+# print(f"Algo é: {algo}")
+
+variavel = "93274890"
+
+# Tipos primitos:
+# texto = "" / '' -> string -> str
+# numeros inteiros = 93420432 -> int
+# números decimais = 3.141592 -> float
+# boleano = Verdadeiro / Falso -> bool
+# Vazio = Null
+
+
+# variavel = input("Coloque seu nome: ")
+# if variavel == "Mauro" or variavel == "André":
+#     print("Olá Dev!")
+# else:
+#     print("Olá!")
+
+
+# junções de condições:
+# numero == 0 -> 0
+# numero > 0 -> 1, 2, 3, 4, 5, ... Verdadeiro
+# numero < 0 -> ..., -5, -4, -3, -2, -1 Verdadeiro
+# numero >= 0 -> 0, 1, 2, ...
+# numero <= 0 -> ..., -2, -1, 0
+
+# idade = 60
+
+# if idade > 17 and idade < 60:
+#     print("Pode entrar!")
+# else:
+#     print("Não entre!")
+
+# e -> and -> os dois tem que ser vedadeiros
+# ou -> or -> qualquer um pode ser verdadeiro
+
+
+# loops
+# cont = 0
+# while cont < 5:
+#     print(cont)
+#     cont += 1
+#     # c = c + 1
+#     # c++
+
+# for item in lista:
+#     print(item)
+
+# lista = ("letras", 9, True, None)
+
+# dicionario = {
+#     "item1": "valor1",
+#     "item2": "valor2",
+#     "item3": "valor3",
+#     "item4": "valor4",
+# }
+
+# for item in dicionario:
+#     print(item)
+
+# print(lista[-1])
+# lista -> [0, 1, 2, 3, 4, ...]
+# lista -> [..., -4, -3, -2, -1]
+
+# print(dicionario["item1"])
+
 
