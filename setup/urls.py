@@ -29,3 +29,5 @@ urlpatterns = [
         name="colletcion_item_delete",
     ),
 ]
+
+# path("caminho/", view.as_view(), name="nome")

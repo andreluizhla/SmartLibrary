@@ -170,7 +170,7 @@
 
 # print(f"Algo é: {algo}")
 
-variavel = "93274890"
+# variavel = "93274890"
 
 # Tipos primitos:
 # texto = "" / '' -> string -> str
@@ -235,3 +235,7 @@ variavel = "93274890"
 # print(dicionario["item1"])
 
 
+# Criação de APPs:
+# django-admin startapp [Nome do APP] 
+# ou
+# python -m django startapp [Nome do APP]

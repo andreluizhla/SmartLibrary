@@ -6,9 +6,11 @@
 {% block main_content %}
     <h1>Cadastro de Leitor</h1>
     <form method="POST">
+        {% comment %} 
+        {% crispy form %}
+        {% endcomment %}
         {% csrf_token %}
-        {% comment %} {% crispy form %} {% endcomment %}
-        {{ form|crispy }}
+        {{ form|crispy }} 
         <button class="btn btn-primary" type="submit">Enviar</button>
     </form>
 {% endblock main_content %}

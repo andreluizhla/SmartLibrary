@@ -45,8 +45,8 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
-    "user_reader.apps.UserReaderConfig",
     "collection_item.apps.CollectionItemConfig",
+    "user_reader.apps.UserReaderConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -135,7 +135,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# Tird Party Apps:
+# Third Party Apps:
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
