@@ -21,14 +21,14 @@
             <tbody>
                 {% for item in collectionitem_list %}
                     <tr>
-                        <td scope="row"> 
-                            {{ item.title }}
-                        </td>
+                        <td scope="row"> {{ item.title }} </td>
                         <td> {{ item.id_code }} </td>
                         <td> {{ item.preservation }} </td>
                         <td> {{ item.availability }} </td>
                         <td>
-                            <a href="{% url "colletcion_item_delete" %}" class="btn btn-danger {% if item.avaibility == "Emprestado" or item.avaibility == "Reservado" %}disable{% endif %}">Excluir</a>
+                            <a href="{% url "colletcion_item_delete" pk=item.id_code %}" class="btn btn-danger btn-sm 
+                            {% if item.availability == "Emprestado" or item.availability == "Reservado" %}disabled{% endif %}
+                            ">Excluir</a>
                         </td>
                     </tr>
                 {% endfor %}

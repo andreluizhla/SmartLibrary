@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir Item Acervo{% endblock title %}
+
+{% block main_content %}
+    <h1>Excluir Item Acervo</h1>
+    {% comment %} {% if item.availability == "Disponível" %} {% endcomment %}
+        <p>Você tem certeza que quer excluir o livro <strong>{{ item.title }}</strong>?</p>
+        <p>ATENÇÃO: ESSA AÇÃO NÃO TERÁ VOLTA!</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-danger">Excluir</button>
+            <a href="{% url "collection_item_list" %}" class="btn btn-primary">Voltar</a>
+        </form>
+    {% comment %} {% else %}
+        <p>Olha só... tentando burlar o sistema, né?</p>
+        <p>Você achou que iria encontrar um erro né?</p>
+        <img src="https://media1.tenor.com/m/IbLb7hkzwpIAAAAd/choque-choque-de-cultura.gif" alt="Achou errado otário!">
+        <p>Agora... vamos voltar para a página principal?</p>
+        <a href="{% url "collection_item_list" %}" class="btn btn-primary">Voltar</a>
+    {% endif %} {% endcomment %}
+{% endblock main_content %}

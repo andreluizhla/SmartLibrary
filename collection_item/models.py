@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+
+from .validators import id_code_validator
 
 
 class CollectionItem(models.Model):
@@ -16,7 +19,7 @@ class CollectionItem(models.Model):
     }
     title = models.CharField(
         verbose_name="Título da Obra",
-        max_length=200,
+        max_length=50,
         null=False,
         blank=False,
     )
@@ -24,6 +27,7 @@ class CollectionItem(models.Model):
         verbose_name="Código Identificador",
         max_length=10,
         primary_key=True,
+        validators=[id_code_validator],
     )
     preservation = models.CharField(
         verbose_name="Estado de Consevação",
@@ -44,5 +48,6 @@ class CollectionItem(models.Model):
         null=False,
         blank=False,
     )
-
     
+    class Meta:
+        ordering = ['title']
