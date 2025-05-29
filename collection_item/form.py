@@ -86,6 +86,7 @@ class CollectionItemForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
+        # Pega o valor do campo 'responsavel' do formulário (se existir)
         responsavel = self.cleaned_data.get("responsavel", "Sistema")
         instance.responsavel_form_input = responsavel
         if commit:
