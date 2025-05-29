@@ -1,5 +1,5 @@
 from django import forms
-from .validators import id_code_validator
+from .validators import id_code_validator, validate_name
 from .models import CollectionItem
 import random
 
@@ -50,6 +50,7 @@ class CollectionItemForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Seu nome completo"}
         ),
+        validators=[validate_name],
     )
 
     class Meta:

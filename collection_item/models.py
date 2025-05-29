@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from .validators import id_code_validator, validate_name
+from .validators import id_code_validator
 
 User = get_user_model()
 
