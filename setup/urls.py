@@ -7,6 +7,8 @@ from collection_item.views import (
     CollectionItemListView,
     CollectionItemCreateView,
     CollectionItemDeleteView,
+    CollectionItemUpdateView,
+    ItemHistoryView,
 )
 
 urlpatterns = [
@@ -26,7 +28,17 @@ urlpatterns = [
     path(
         "collection-item/delete/<str:pk>",
         CollectionItemDeleteView.as_view(),
-        name="colletcion_item_delete",
+        name="collection_item_delete",
+    ),
+    path(
+        "collection-item/update/<str:pk>",
+        CollectionItemUpdateView.as_view(),
+        name="collection_item_update",
+    ),
+    path(
+        "collection-item/history",
+        ItemHistoryView.as_view(),
+        name="collection_item_history",
     ),
 ]
 

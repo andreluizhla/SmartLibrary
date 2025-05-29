@@ -1,11 +1,18 @@
-from django.views.generic import ListView, CreateView, DeleteView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+    DetailView,
+)
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.http import HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .form import CollectionItemForm
-from .models import CollectionItem
+from .models import CollectionItem, ItemStatusChange
 
 
 class CollectionItemListView(ListView):
@@ -26,6 +33,31 @@ class CollectionItemDeleteView(DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.availability != "Disponível":
+        if (
+            self.object.availability == "Emprestado"
+            or self.object.availability == "Reservado"
+        ):
             return HttpResponseForbidden()
         return super().dispatch(request, *args, **kwargs)
+
+
+class CollectionItemUpdateView(UpdateView):
+    model = CollectionItem
+    form_class = CollectionItemForm
+    template_name = "collection_item/collectionitem_form.html"
+    success_url = reverse_lazy("collection_item_list")
+
+    def form_valid(self, form):
+        responsavel = form.cleaned_data.get("responsavel", "Sistema")
+        form.instance.responsavel_form_input = responsavel
+        return super().form_valid(form)
+
+
+class ItemHistoryView(ListView):
+    model = ItemStatusChange
+    template_name = "collection_item/item_history.html"
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["history"] = self.object.status_changes.all().order_by("-changed_at")
+    #     return context
