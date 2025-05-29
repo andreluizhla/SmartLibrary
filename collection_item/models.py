@@ -70,7 +70,7 @@ class CollectionItem(models.Model):
                         changed_by=getattr(self, "responsavel_form_input", "Sistema"),
                     )
             except CollectionItem.DoesNotExist:
-                pass
+                pass  # Item não existe mais no banco
         super().save(*args, **kwargs)
 
 
