@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from .validators import id_code_validator, validate_name
 
 User = get_user_model()
@@ -81,7 +82,7 @@ class ItemStatusChange(models.Model):
     previous_status = models.CharField(max_length=10, verbose_name="Status Anterior")
     new_status = models.CharField(max_length=10, verbose_name="Novo Status")
     changed_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Data da Alteração"
+        verbose_name="Data da Alteração", default=timezone.now()
     )
     changed_by = models.CharField(
         max_length=100,
