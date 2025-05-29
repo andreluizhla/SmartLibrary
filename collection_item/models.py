@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-from django.utils import timezone
+from django.utils.timezone import now
 from .validators import id_code_validator, validate_name
 
 User = get_user_model()
@@ -71,7 +71,7 @@ class CollectionItem(models.Model):
                         changed_by=getattr(self, "responsavel_form_input", "Sistema"),
                     )
             except CollectionItem.DoesNotExist:
-                pass  # Item não existe mais no banco
+                pass
         super().save(*args, **kwargs)
 
 
@@ -81,9 +81,7 @@ class ItemStatusChange(models.Model):
     )
     previous_status = models.CharField(max_length=10, verbose_name="Status Anterior")
     new_status = models.CharField(max_length=10, verbose_name="Novo Status")
-    changed_at = models.DateTimeField(
-        verbose_name="Data da Alteração", default=timezone.now()
-    )
+    changed_at = models.DateTimeField(verbose_name="Data da Alteração", default=now)
     changed_by = models.CharField(
         max_length=100,
         verbose_name="Responsável pela Alteração",
