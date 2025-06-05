@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from django.contrib.messages import constants as messages
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,6 +50,7 @@ THIRD_PARTY_APPS = [
 MY_APPS = [
     "collection_item.apps.CollectionItemConfig",
     "user_reader.apps.UserReaderConfig",
+    "collection.apps.CollectionConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -134,6 +138,17 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Correção de Erro de mensagens
+# Se não entender, procurar o Squad Lider
+
+MESSAGE_TAGS = {
+    messages.SUCCESS: "success",
+    messages.ERROR: "danger",
+    messages.WARNING: "warning",
+    messages.INFO: "info",
+    messages.DEBUG: "secondary",
+}
 
 # Third Party Apps:
 

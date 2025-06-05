@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmar Exclução{% endblock title %}
+
+{% block main_content %}
+    <h1>Confirmar Exclusão</h1>
+    <p>Você tem certeza que deseja excluir o Leitor <strong>{{ user.name }}</strong>?</p>
+    <p><strong>ATENÇÃO: ESSA AÇÃO NÃO PODERÁ SER DESFEITA!</strong></p>
+    <form method="POST">
+        {% csrf_token %}
+        <button class="btn btn-danger">Excluir</button>
+        <a href="{% url "user_list" %}" class="btn btn-primary">Voltar</a>
+    </form>
+{% endblock main_content %}

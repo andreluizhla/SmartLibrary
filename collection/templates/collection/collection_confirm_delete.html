@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir Acervo{% endblock title %}
+
+{% block main_content %}
+    <h1>Excluir Item Acervo</h1>
+        <p>Você tem certeza que quer excluir o seguinte acervo?</p>
+        <p>Nome: <strong>{{ collection.title }}</strong></p>
+        <p>Autor: <strong>{{ collection.author }}</strong></p>
+        <p>Editora: <strong>{{ collection.publisher }}</strong></p>
+        <p>Ano de Publicação: <strong>{{ collection.year_pub }}</strong></p>
+        <p>ATENÇÃO: ESSA AÇÃO NÃO TERÁ VOLTA!</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-danger">Excluir</button>
+            <a href="{% url "collection_list" %}" class="btn btn-primary">Voltar</a>
+        </form>
+{% endblock main_content %}

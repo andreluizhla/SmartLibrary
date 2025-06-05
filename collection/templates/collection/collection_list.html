@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Lista de Acervos
+{% endblock title %}
+
+{% block main_content %}
+    <h1>Lista de Acervos</h1>
+    {% if collection_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">TÍTULO</th>
+                    <th scope="col">AUTOR</th>
+                    <th scope="col">EDITORA</th>
+                    <th scope="col">ANO DE PUBLICAÇÃO</th>
+                    <th scope="col">AÇÃO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for collection in collection_list %}
+                    <tr>
+                        <td scope="row"> {{ collection.title|truncatechars:50 }} </td>
+                        <td scope="row"> {{ collection.author|truncatechars:20 }} </td>
+                        <td scope="row"> {{ collection.publisher }} </td>
+                        <td scope="row"> {{ collection.year_pub }} </td>
+                        <td scope="row">
+                            <a href="{% url "collection_update" pk=collection.id %}" class="btn btn-primary">Editar</a>
+                            <a href="{% url "collection_delete" pk=collection.id %}" class="btn btn-danger">Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Parece que não tem nada...</p>
+    {% endif %}
+    <div>
+        <a href="{% url 'collection_create' %}" class="btn btn-primary btn-sm">Cadastrar Acervo</a>
+    </div>
+{% endblock main_content %}

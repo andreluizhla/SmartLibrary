@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Página Inicial
+{% endblock title %}
+
+{% block main_content %}
+    <h1>Página Inicial</h1>
+    <p>Seja bem vindo à página inicial do <strong>SmartLibrary</strong> &#x1F600 !</p>
+    <h2>Funcionalidades em produção...</h2>
+    <div class="d-grid row-gap-3">
+        <div class="row p-2">
+            <div class="col"><a href="{% url "user_list" %}" class="btn btn-primary btn-lg">Lista de Usuários</a></div>
+            <div class="col"><a href="{% url "collection_item_list" %}" class="btn btn-primary btn-lg">Lista de Itens de Acervos</a></div>
+        </div>
+        <div class="row p-2">
+            <div class="col"><a href="{% url "collection_list" %}" class="btn btn-primary btn-lg">Lista de Acervos</a></div>
+            <div class="col"><a href="{% url "collection_item_history" %}" class="btn btn-primary btn-lg">Histórico de Edições</a></div>
+        </div>
+    </div>
+{% endblock main_content %}

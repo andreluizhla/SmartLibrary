@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 def validate_name(value):
     name = value
 
-    if re.search(r"[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]", name):
+    if re.search(r"[^a-zA-ZáéêíóúÁÉÊÍÓÚñÑ\s]", name):
         raise ValidationError("O nome não pode conter números ou símbolos")
 
 

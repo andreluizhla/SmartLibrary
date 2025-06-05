@@ -26,6 +26,11 @@ class CollectionItemCreateView(CreateView):
     # fields = ["title", "id_code", "preservation", "availability"]
     success_url = reverse_lazy("collection_item_list")
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Item de Acervo cadastrado com sucesso!")
+        return response
+
 
 class CollectionItemDeleteView(DeleteView):
     model = CollectionItem
@@ -40,6 +45,11 @@ class CollectionItemDeleteView(DeleteView):
             return HttpResponseForbidden()
         return super().dispatch(request, *args, **kwargs)
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Item de Acervo excluido com sucesso!")
+        return response
+
 
 class CollectionItemUpdateView(UpdateView):
     model = CollectionItem
@@ -48,9 +58,13 @@ class CollectionItemUpdateView(UpdateView):
     success_url = reverse_lazy("collection_item_list")
 
     def form_valid(self, form):
+        # mensagem
+        response = super().form_valid(form)
+        messages.success(self.request, "Item de Acervo atualizado com sucesso!")
+        # se responsável existe, coloca ele, senão, coloca Sistema
         responsavel = form.cleaned_data.get("responsavel", "Sistema")
         form.instance.responsavel_form_input = responsavel
-        return super().form_valid(form)
+        return super().form_valid(form), response
 
 
 class ItemHistoryView(ListView):

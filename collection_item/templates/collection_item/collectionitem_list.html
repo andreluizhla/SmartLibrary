@@ -21,7 +21,7 @@
             <tbody>
                 {% for item in collectionitem_list %}
                     <tr>
-                        <td scope="row"> {{ item.title }} </td>
+                        <td scope="row"> {{ item.title|truncatechars:50 }} </td>
                         <td> {{ item.id_code }} </td>
                         <td> {{ item.preservation }} </td>
                         <td> {{ item.availability }} </td>

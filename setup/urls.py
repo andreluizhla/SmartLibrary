@@ -1,7 +1,13 @@
 from django.contrib import admin
 from django.urls import path
 
-from user_reader.views import UserReaderListView, UserReaderCreateView
+from user_reader.views import (
+    UserReaderListView,
+    UserReaderCreateView,
+    UserReaderDeleteView,
+    UserReaderUpdateView,
+    home_page,
+)
 
 from collection_item.views import (
     CollectionItemListView,
@@ -11,10 +17,36 @@ from collection_item.views import (
     ItemHistoryView,
 )
 
+from collection.views import (
+    CollectionListView,
+    CollectionCreateView,
+    CollectionUpdateView,
+    CollectionDeleteView,
+)
+
+# Lista de URLs separados por apps
+
 urlpatterns = [
+    # Admin
     path("admin/", admin.site.urls),
-    path("", UserReaderListView.as_view(), name="user_list"),
-    path("create/", UserReaderCreateView.as_view(), name="user_create"),
+    # main page
+    path("", home_page, name="home_page"),
+    #
+    # user_reader
+    path("user/", UserReaderListView.as_view(), name="user_list"),
+    path("user/create/", UserReaderCreateView.as_view(), name="user_create"),
+    path(
+        "user/update/<str:pk>",
+        UserReaderUpdateView.as_view(),
+        name="user_update",
+    ),
+    path(
+        "user/delete/<str:pk>",
+        UserReaderDeleteView.as_view(),
+        name="user_delete",
+    ),
+    #
+    # collection_item
     path(
         "collection-item/",
         CollectionItemListView.as_view(),
@@ -26,19 +58,33 @@ urlpatterns = [
         name="collection_item_create",
     ),
     path(
-        "collection-item/delete/<str:pk>",
-        CollectionItemDeleteView.as_view(),
-        name="collection_item_delete",
-    ),
-    path(
         "collection-item/update/<str:pk>",
         CollectionItemUpdateView.as_view(),
         name="collection_item_update",
     ),
     path(
+        "collection-item/delete/<str:pk>",
+        CollectionItemDeleteView.as_view(),
+        name="collection_item_delete",
+    ),
+    path(
         "collection-item/history",
         ItemHistoryView.as_view(),
         name="collection_item_history",
+    ),
+    #
+    # collection
+    path("collection", CollectionListView.as_view(), name="collection_list"),
+    path("collection/create", CollectionCreateView.as_view(), name="collection_create"),
+    path(
+        "collection/update/<str:pk>",
+        CollectionUpdateView.as_view(),
+        name="collection_update",
+    ),
+    path(
+        "collection/delete/<str:pk>",
+        CollectionDeleteView.as_view(),
+        name="collection_delete",
     ),
 ]
 

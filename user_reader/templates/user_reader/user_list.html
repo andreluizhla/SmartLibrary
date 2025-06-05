@@ -14,17 +14,22 @@
                     <th scope="col">E-MAIL</th>
                     <th scope="col">TELEFONE</th>
                     <th scope="col">SENHA</th>
+                    <th scope="col">AÇÃO</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in user_list %}
                     <tr>
-                        <td scope="row"> {{ user.name }} </td>
+                        <td scope="row"> {{ user.name|truncatechars:50 }} </td>
                         <td scope="row"> {{ user.cpf }} </td>
                         <td scope="row"> {{ user.cgm }} </td>
-                        <td scope="row"> {{ user.email }} </td>
+                        <td scope="row"> {{ user.email|truncatechars:20 }} </td>
                         <td scope="row"> {{ user.phone }} </td>
-                        <td scope="row"> {{ user.password }} </td>
+                        <td scope="row"> {{ user.password|truncatechars:20 }} </td>
+                        <td>
+                            <a href="{% url "user_delete" pk=user.cpf %}" class="btn btn-danger btn-sm">Excluir</a>
+                            <a href="{% url "user_update" pk=user.cpf %}" class="btn btn-primary btn-sm">Editar</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
