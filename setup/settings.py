@@ -49,7 +49,7 @@ THIRD_PARTY_APPS = [
 
 MY_APPS = [
     "collection_item.apps.CollectionItemConfig",
-    "user_reader.apps.UserReaderConfig",
+    "user.apps.UserConfig",
     "collection.apps.CollectionConfig",
 ]
 

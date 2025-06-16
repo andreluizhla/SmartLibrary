@@ -53,20 +53,20 @@ class CollectionItemForm(forms.ModelForm):
         validators=[validate_name],
     )
 
-    class Meta:
-        model = CollectionItem
-        fields = ["title", "id_code", "preservation", "availability"]
-        widgets = {
-            "title": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Título da obra"}
-            ),
-            "entry_date": forms.DateInput(
-                attrs={"class": "form-control", "type": "date", "readonly": True}
-            ),
-        }
-        labels = {
-            "title": "Título da Obra",
-        }
+    # class Meta:
+    #     model = CollectionItem
+    #     fields = ["title", "id_code", "preservation", "availability"]
+    #     widgets = {
+    #         "title": forms.TextInput(
+    #             attrs={"class": "form-control", "placeholder": "Título da obra"}
+    #         ),
+    #         "entry_date": forms.DateInput(
+    #             attrs={"class": "form-control", "type": "date", "readonly": True}
+    #         ),
+    #     }
+    #     labels = {
+    #         "title": "Título da Obra",
+    #     }
 
     def clean(self):
         cleaned_data = super(CollectionItemForm, self).clean()

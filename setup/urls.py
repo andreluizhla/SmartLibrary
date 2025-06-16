@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 
-from user_reader.views import (
+from user.views import (
     UserReaderListView,
     UserReaderCreateView,
     UserReaderDeleteView,
