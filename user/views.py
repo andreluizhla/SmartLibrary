@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 from django.contrib import messages
 
-from .forms import UserForm
+from .form import UserForm
 from .models import User
 
 # def home(request):
@@ -20,23 +20,27 @@ class UserReaderListView(ListView):
 
 class UserReaderCreateView(CreateView):
     model = User
-    fields = ["name", "cpf", "cgm", "email", "phone", "password"]
+    # fields = "__all__"
+    form_class = UserForm
+    template_name = "user/user_form.html"
     success_url = reverse_lazy("user_list")
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, "Leitor cadastrado com sucesso!")
+        messages.success(self.request, "Usuário cadastrado com sucesso!")
         return response
 
 
 class UserReaderUpdateView(UpdateView):
     model = User
-    fields = ["name", "cpf", "cgm", "email", "phone", "password"]
+    # fields = ["name", "cpf", "cgm", "email", "phone", "password"]
+    form_class = UserForm
+    template_name = "user/user_form.html"
     success_url = reverse_lazy("user_list")
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, "Leitor atualizado com sucesso!")
+        messages.success(self.request, "Usuário atualizado com sucesso!")
         return response
 
 
@@ -46,7 +50,7 @@ class UserReaderDeleteView(DeleteView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, "Leitor excluido com sucesso!")
+        messages.success(self.request, "Usuário excluido com sucesso!")
         return response
 
 

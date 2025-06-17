@@ -12,6 +12,25 @@ from .validar_info import (
 
 
 class User(models.Model):
+    # Para a escolha de usuário:
+    USERS_TYPES_LIST = {
+        "LEITOR": "Leitor",
+        "FUNCIONARIO": "Funcionário",
+        "BIBLIOTECARIO": "Bibliotecario",
+    }
+
+    type_user = models.CharField(
+        verbose_name="Tipo de Usuário",
+        choices=USERS_TYPES_LIST,
+        max_length=13,
+        null=False,
+        blank=False,
+        default=USERS_TYPES_LIST["LEITOR"],
+        help_text="Escolha o tipo de usuário",
+    )
+
+    # Modelo com os itens repetidos em todos os usuários
+
     name = models.CharField(
         verbose_name="Nome Completo",
         max_length=100,
@@ -29,15 +48,6 @@ class User(models.Model):
         primary_key=True,
         validators=[validate_cpf],
         help_text="Não use pontos nem traços",
-    )
-    cgm = models.CharField(
-        verbose_name="CGM",
-        max_length=10,
-        null=False,
-        blank=False,
-        unique=True,
-        validators=[validate_cgm],
-        help_text="Código Geral de Matrícula (10 dígitos)",
     )
     email = models.EmailField(
         verbose_name="E-mail",
@@ -61,6 +71,17 @@ class User(models.Model):
         blank=False,
         validators=[validate_password],
         help_text="Coloque uma senha com no mínimo 8 caracteres",
+    )
+
+    # Campo(s) para Leitor:
+    cgm = models.CharField(
+        verbose_name="CGM",
+        max_length=10,
+        blank=True,
+        null=True,
+        unique=True,
+        validators=[validate_cgm],
+        help_text="Código Geral de Matrícula (10 dígitos)",
     )
 
     def clean_email(self):

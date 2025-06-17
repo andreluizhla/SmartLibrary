@@ -8,6 +8,7 @@
         <table class="table table-striped table-hover table-sm">
             <thead>
                 <tr>
+                    <th scope="col">TIPO</th>
                     <th scope="col">NOME</th>
                     <th scope="col">CPF</th>
                     <th scope="col">CGM</th>
@@ -20,6 +21,7 @@
             <tbody>
                 {% for user in user_list %}
                     <tr>
+                        <td scope="row"> {{ user.type_user }} </td>
                         <td scope="row"> {{ user.name|truncatechars:50 }} </td>
                         <td scope="row"> {{ user.cpf }} </td>
                         <td scope="row"> {{ user.cgm }} </td>

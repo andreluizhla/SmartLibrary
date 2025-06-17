@@ -13,4 +13,29 @@
         {{ form|crispy }} 
         <button class="btn btn-primary" type="submit">Enviar</button>
     </form>
+    <script>
+        function mostrarCamposUsuarios() {
+            const type_user = document.getElementById("id_type_user").value;
+            const cgmField = document.getElementById("div_id_cgm");
+            const cgmInput = document.getElementById("id_cgm");
+            
+            if (type_user === "LEITOR") {
+                cgmField.style.display = "block";
+                cgmInput.required = true;
+            } else {
+                cgmField.style.display = "none";
+                cgmInput.required = false;
+                cgmInput.value = ""; // Limpa o valor quando escondido
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            mostrarCamposUsuarios();
+            
+            // Adiciona validação no submit
+            document.getElementById('userForm').addEventListener('submit', function(e) {
+                mostrarCamposUsuarios(); // Força validação antes de enviar
+            });
+        });
+    </script>
 {% endblock main_content %}
