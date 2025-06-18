@@ -14,18 +14,17 @@ from .validar_info import (
 class User(models.Model):
     # Para a escolha de usuário:
     USERS_TYPES_LIST = {
-        "LEITOR": "Leitor",
-        "FUNCIONARIO": "Funcionário",
-        "BIBLIOTECARIO": "Bibliotecario",
+        0 : "Leitor",
+        1 : "Funcionário",
+        2 : "Bibliotecario",
     }
 
-    type_user = models.CharField(
+    type_user = models.PositiveSmallIntegerField(
         verbose_name="Tipo de Usuário",
         choices=USERS_TYPES_LIST,
-        max_length=13,
         null=False,
         blank=False,
-        default=USERS_TYPES_LIST["LEITOR"],
+        default=0,
         help_text="Escolha o tipo de usuário",
     )
 

@@ -12,9 +12,9 @@ class UserForm(forms.ModelForm):
             "type_user": forms.Select(
                 attrs={"onchange": "mostrarCamposUsuarios()"},
                 choices=[
-                    ("LEITOR", "Leitor"),
-                    ("FUNCIONARIO", "Funcionário"),
-                    ("BIBLIOTECARIO", "Bibliotecario"),
+                    (0, "Leitor"),
+                    (1, "Funcionário"),
+                    (2, "Bibliotecario"),
                 ],
             ),
             "password": forms.PasswordInput(
@@ -38,10 +38,16 @@ class UserForm(forms.ModelForm):
         user_type = cleaned_data.get("type_user")
         cgm = cleaned_data.get("cgm")
 
-        if user_type == "LEITOR":
+        if user_type == 0:
             if not cgm:
                 self.add_error("cgm", "CGM é obrigatório para leitores")
         else:
             cleaned_data["cgm"] = None
 
         return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields["type_user"].disabled = True
+            self.fields["cpf"].disabled = True
