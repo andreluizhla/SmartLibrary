@@ -5,8 +5,11 @@ from django.core.exceptions import ValidationError
 def validate_name(value):
     name = value
 
-    if re.search(r"[^a-zA-ZáéêíóúÁÉÊÍÓÚñÑ\s]", name):
+    if re.search(r"[^a-zA-ZáãéêíóúÁÃÉÊÍÓÚñÑ\s]", name):
         raise ValidationError("O nome não pode conter números ou símbolos")
+
+    if len(name.split()) < 2:
+        raise ValidationError("O nome deve conter um Nome e um Sobrenome")
 
 
 def validate_cpf(value):
