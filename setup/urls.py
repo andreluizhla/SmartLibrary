@@ -2,10 +2,10 @@ from django.contrib import admin
 from django.urls import path
 
 from user.views import (
-    UserReaderListView,
-    UserReaderCreateView,
-    UserReaderDeleteView,
-    UserReaderUpdateView,
+    UserListView,
+    UserCreateView,
+    UserDeleteView,
+    UserUpdateView,
     home_page,
 )
 
@@ -33,16 +33,16 @@ urlpatterns = [
     path("", home_page, name="home_page"),
     #
     # user_reader
-    path("user/", UserReaderListView.as_view(), name="user_list"),
-    path("user/create/", UserReaderCreateView.as_view(), name="user_create"),
+    path("user/", UserListView.as_view(), name="user_list"),
+    path("user/create/", UserCreateView.as_view(), name="user_create"),
     path(
         "user/update/<str:pk>",
-        UserReaderUpdateView.as_view(),
+        UserUpdateView.as_view(),
         name="user_update",
     ),
     path(
         "user/delete/<str:pk>",
-        UserReaderDeleteView.as_view(),
+        UserDeleteView.as_view(),
         name="user_delete",
     ),
     #

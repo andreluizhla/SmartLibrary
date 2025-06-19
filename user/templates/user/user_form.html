@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %}Cadastro de Leitor{% endblock title %}
+{% block title %}{% if user.pk %}Editor{% else %}Cadastro{% endif %} de Leitor{% endblock title %}
 
 {% block main_content %}
-    <h1>Cadastro de Leitor</h1>
+    <h1>{% if user.pk %}Editor{% else %}Cadastro{% endif %} de Leitor</h1>
     <form method="POST" id="userForm">
         {% csrf_token %}
         {{ form|crispy }} 
