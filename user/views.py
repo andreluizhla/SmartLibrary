@@ -10,7 +10,7 @@ from .models import User
 #     return render(request, )
 
 
-class UserReaderListView(ListView):
+class UserListView(ListView):
     model = User
 
 
@@ -18,7 +18,7 @@ class UserReaderListView(ListView):
 #     return render(request, "user_reader/user_form", {'form' : form})
 
 
-class UserReaderCreateView(CreateView):
+class UserCreateView(CreateView):
     model = User
     # fields = "__all__"
     form_class = UserForm
@@ -31,7 +31,7 @@ class UserReaderCreateView(CreateView):
         return response
 
 
-class UserReaderUpdateView(UpdateView):
+class UserUpdateView(UpdateView):
     model = User
     # fields = ["name", "cpf", "cgm", "email", "phone", "password"]
     form_class = UserForm
@@ -44,7 +44,7 @@ class UserReaderUpdateView(UpdateView):
         return response
 
 
-class UserReaderDeleteView(DeleteView):
+class UserDeleteView(DeleteView):
     model = User
     success_url = reverse_lazy("user_list")
 
@@ -55,4 +55,4 @@ class UserReaderDeleteView(DeleteView):
 
 
 def home_page(request):
-    return render(request, "user_reader/home_page.html")
+    return render(request, "user/home_page.html")

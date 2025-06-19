@@ -7,10 +7,10 @@ def validate_name(value):
 
     if re.search(r"[^a-zA-ZáãéêíóúÁÃÉÊÍÓÚñÑ\s]", name):
         raise ValidationError("O nome não pode conter números ou símbolos")
-
+    
     if len(name.split()) < 2:
-        raise ValidationError("O nome deve conter um Nome e um Sobrenome")
-
+        raise ValidationError("Coloque o nome completo")
+    
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
