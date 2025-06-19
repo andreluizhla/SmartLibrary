@@ -9,7 +9,7 @@ def validate_name(value):
         raise ValidationError("O nome não pode conter números ou símbolos")
     
     if len(name.split()) < 2:
-        raise ValidationError("Coloque o nome completo")
+        raise ValidationError("O nome deve conter um Nome e um Sobrenome")
     
 
 def validate_cpf(value):
