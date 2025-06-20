@@ -235,6 +235,48 @@
 # print(dicionario["item1"])
 
 
+
+
+
+# Comandos para o projeto SmartLibrary 
+
+# Comandos:
+# pip install django
+# pip install python-decouple
+# pip install dj-database-url
+# pip install black
+# pip install crispy-bootstrap5
+
+# Extensão Recomendada: 
+# SQLite Viewer
+# Black Formatter
+# MySQL por: Database Client
+
+# { 
+#     "editor.formatOnSave": true, 
+#     "python.formatting.provider": "black", 
+#     "editor.defaultFormatter": "ms-python.black-formatter", 
+#     "files.associations": { 
+#         "**/templates/**/*.html": "django-html" 
+#     }, 
+#     "emmet.includeLanguages": { 
+#         "django-html": "html" 
+#     } 
+# } 
+
+# Criar Ambiente Virtual
+# python -m venv .venv
+
+# Em seguida, TENTE o comando:
+# .venv\Scripts\activate
+
+# se ocorrer erro de permissão, execute o comando:
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# Execute novamente o penúltimo comando
+
+
+
 # Criação de APPs:
 # django-admin startapp [Nome do APP] 
 # ou
