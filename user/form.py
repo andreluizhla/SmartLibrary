@@ -26,7 +26,7 @@ class UserForm(forms.ModelForm):
             ),
             "cgm": forms.TextInput(
                 attrs={
-                    "data-required-for": "LEITOR",
+                    "data-required-for": 0,
                     "class": "form-control",
                     "placeholder": "Entrada para Leitor",
                 }
