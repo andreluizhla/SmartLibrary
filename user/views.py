@@ -6,21 +6,23 @@ from django.contrib import messages
 from .form import UserForm
 from .models import User
 
-# def home(request):
-#     return render(request, )
-
 
 class UserListView(ListView):
     model = User
-
-
-# def user_reader_create(request):
-#     return render(request, "user_reader/user_form", {'form' : form})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Adiciona conversão para template (opcional)
+        context['tipos'] = {
+            0: "Leitor",
+            1: "Funcionário",
+            2: "Bibliotecário"
+        }
+        return context
 
 
 class UserCreateView(CreateView):
     model = User
-    # fields = "__all__"
     form_class = UserForm
     template_name = "user/user_form.html"
     success_url = reverse_lazy("user_list")
@@ -33,7 +35,6 @@ class UserCreateView(CreateView):
 
 class UserUpdateView(UpdateView):
     model = User
-    # fields = ["name", "cpf", "cgm", "email", "phone", "password"]
     form_class = UserForm
     template_name = "user/user_form.html"
     success_url = reverse_lazy("user_list")

@@ -1,10 +1,4 @@
-from django.views.generic import (
-    ListView,
-    CreateView,
-    DeleteView,
-    UpdateView,
-    DetailView,
-)
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import render
@@ -23,7 +17,6 @@ class CollectionItemCreateView(CreateView):
     model = CollectionItem
     form_class = CollectionItemForm
     template_name = "collection_item/collectionitem_form.html"
-    # fields = ["title", "id_code", "preservation", "availability"]
     success_url = reverse_lazy("collection_item_list")
 
     def form_valid(self, form):

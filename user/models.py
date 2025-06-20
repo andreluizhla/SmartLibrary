@@ -13,18 +13,22 @@ from .validar_info import (
 
 class User(models.Model):
     # Para a escolha de usuário:
-    USERS_TYPES_LIST = {
-        0 : "Leitor",
-        1 : "Funcionário",
-        2 : "Bibliotecario",
-    }
+    LEITOR = 0
+    FUNCIONARIO = 1
+    BIBLIOTECARIO = 2
+
+    USERS_TYPES_LIST = [
+        (LEITOR, "Leitor"),
+        (FUNCIONARIO, "Funcionário"),
+        (BIBLIOTECARIO, "Bibliotecário"),
+    ]
 
     type_user = models.PositiveSmallIntegerField(
         verbose_name="Tipo de Usuário",
         choices=USERS_TYPES_LIST,
         null=False,
         blank=False,
-        default=0,
+        default=LEITOR,
         help_text="Escolha o tipo de usuário",
     )
 
@@ -82,6 +86,13 @@ class User(models.Model):
         validators=[validate_cgm],
         help_text="Código Geral de Matrícula (10 dígitos)",
     )
+
+    def get_tipo_usuario_display(self):
+        """Retorna o label correspondente ao número armazenado"""
+        for numero, label in self.USERS_TYPES_LIST:
+            if numero == self.type_user:
+                return label
+        return "Desconhecido"
 
     def clean_email(self):
         super().clean()

@@ -21,7 +21,7 @@
             <tbody>
                 {% for user in user_list %}
                     <tr>
-                        <td scope="row"> {{ user.type_user }} </td>
+                        <td scope="row"> {{ user.get_tipo_usuario_display }} </td>
                         <td scope="row"> {{ user.name|truncatechars:50 }} </td>
                         <td scope="row"> {{ user.cpf }} </td>
                         <td scope="row"> {{ user.cgm }} </td>
