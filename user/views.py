@@ -56,6 +56,3 @@ class UserDeleteView(DeleteView):
 
 def home_page(request):
     return render(request, "user/home_page.html")
-
-def choose_user(request):
-    return render(request, "user/choose_user.html")
