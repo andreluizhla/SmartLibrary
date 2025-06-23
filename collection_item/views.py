@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .form import CollectionItemForm
+from .forms import CollectionItemForm
 from .models import CollectionItem, ItemStatusChange
 
 

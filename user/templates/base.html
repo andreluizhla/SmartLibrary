@@ -10,30 +10,61 @@
     {% block more_head %}{% endblock more_head %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    {% comment %} Barra de Navegação {% endcomment %}
+    <nav class="navbar navbar-expand-sm bg-body-tertiary p-3" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url "home_page" %}">SmartLibrary</a>
+            <a class="navbar-brand" href="{% url "home_page" %}">SmartLibrary</a> <!--Página principal-->
+
+            {% comment %} Botão para responsividade {% endcomment %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            {% comment %} Links na barra de navegação {% endcomment %}
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url "user_list" %}">Leitores</a>
+                <ul class="navbar-nav flex-fill align-items-center">
+                    <li class="nav-item dropdown">
+                        <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Funcionalidades</p>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <a class="nav-link active" aria-current="page" href="{% url "user_list" %}">Leitores</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a class="nav-link active" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a class="nav-link active" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a class="nav-link active" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
-                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item ms-auto">
+                            <a class="nav-link active" href="{% url "user_login" %}"><i class="bi bi-person-circle"></i> Entrar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url "user_register" %}">Cadastrar</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown ms-auto">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Olá {{ user }}!                    
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item">
+                                    <a href="{% url "user_logout" %}">Sair</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+
+    {% comment %} Lugar para aparecer as mensagens {% endcomment %}
     {% if messages %}
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
             {% for message in messages %}
@@ -44,6 +75,8 @@
             {% endfor %}
         </div>
     {% endif %}
+
+    {% comment %} Conteúdo principal {% endcomment %}
     <main class="container">
         {% block main_content %}
 

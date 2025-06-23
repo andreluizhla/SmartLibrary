@@ -1,6 +1,8 @@
 import re
 from django.db import models
 from django.core.validators import validate_email
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.validators import MinLengthValidator
 from django.core.exceptions import ValidationError
 from .validar_info import (
     validate_name,
@@ -11,96 +13,59 @@ from .validar_info import (
 )
 
 
-class User(models.Model):
-    # Para a escolha de usuário:
+class User(AbstractUser):
     LEITOR = 0
     FUNCIONARIO = 1
     BIBLIOTECARIO = 2
 
-    USERS_TYPES_LIST = [
+    USER_TYPES = [
         (LEITOR, "Leitor"),
         (FUNCIONARIO, "Funcionário"),
         (BIBLIOTECARIO, "Bibliotecário"),
     ]
 
     type_user = models.PositiveSmallIntegerField(
-        verbose_name="Tipo de Usuário",
-        choices=USERS_TYPES_LIST,
-        null=False,
-        blank=False,
-        default=LEITOR,
-        help_text="Escolha o tipo de usuário",
-    )
-
-    # Modelo com os itens repetidos em todos os usuários
-
-    name = models.CharField(
-        verbose_name="Nome Completo",
-        max_length=100,
-        null=False,
-        blank=False,
-        validators=[validate_name],
-        unique=True,
-        help_text="Esse nome ficará no banco de dados da Secretaria de Educação do Paraná",
+        choices=USER_TYPES, default=LEITOR, verbose_name="Tipo de Usuário"
     )
     cpf = models.CharField(
-        verbose_name="CPF",
         max_length=11,
-        null=False,
-        blank=False,
-        primary_key=True,
-        validators=[validate_cpf],
+        unique=True,
+        verbose_name="CPF",
+        validators=[MinLengthValidator(11), validate_cpf],
         help_text="Não use pontos nem traços",
     )
-    email = models.EmailField(
-        verbose_name="E-mail",
-        max_length=50,
-        null=False,
-        blank=False,
-        unique=True,
-        validators=[validate_email],
-        help_text="Use o @gmail ou o @escola",
-    )
     phone = models.CharField(
-        verbose_name="Telefone",
         max_length=11,
-        validators=[validate_phone],
-        help_text="Digite apenas números, sem pontuações ou espaços. Exemplo: Para (21) 99999-8888, digite 21999998888",
+        verbose_name="Telefone",
+        validators=[MinLengthValidator(10), validate_phone],
+        help_text="Digite apenas números, sem pontuações ou espaços.",
     )
-    password = models.CharField(
-        verbose_name="Senha",
-        max_length=128,
-        null=False,
-        blank=False,
-        validators=[validate_password],
-        help_text="Coloque uma senha com no mínimo 8 caracteres",
-    )
-
-    # Campo(s) para Leitor:
     cgm = models.CharField(
-        verbose_name="CGM",
         max_length=10,
         blank=True,
         null=True,
         unique=True,
+        verbose_name="CGM",
         validators=[validate_cgm],
         help_text="Código Geral de Matrícula (10 dígitos)",
     )
+
+    def __str__(self):
+        return self.username
 
     def get_tipo_usuario_display(self):
         """Retorna o label correspondente ao número armazenado"""
         for numero, label in self.USERS_TYPES_LIST:
             if numero == self.type_user:
                 return label
-        return "Desconhecido"
+        return 0
 
     def clean_email(self):
-        super().clean()
+        email = self.email.lower().strip()
+        if User.objects.filter(email=email).exclude(pk=self.pk).exists():
+            raise ValidationError("O Email já está em uso")
+        return email
 
     def cpf_formatted(self):
         cpf_limpo = re.sub(r"[^0-9]", "", self.cpf)
         return f"{cpf_limpo[:3]}.{cpf_limpo[3:6]}.{cpf_limpo[6:9]}-{cpf_limpo[9:]}"
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)

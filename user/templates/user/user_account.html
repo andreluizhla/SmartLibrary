@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil - {{ user }}{% endblock title %}
+
+{% block main_content %}
+    <h1>Olá {% if user.first_name %}{{user.first_name|upper}}{% else %}{{user}}{% endif %}!</h1>
+{% endblock main_content %}
