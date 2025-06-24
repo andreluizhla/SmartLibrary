@@ -138,11 +138,11 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home_page'
-LOGOUT_REDIRECT_URL = 'home_page'
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "home_page"
+LOGOUT_REDIRECT_URL = "home_page"
 
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = "user.User"
 
 # Correção de Erro de mensagens
 # Se não entender, procurar o Squad Lider

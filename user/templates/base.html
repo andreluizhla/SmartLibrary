@@ -23,6 +23,7 @@
             {% comment %} Links na barra de navegação {% endcomment %}
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav flex-fill align-items-center">
+                    {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Funcionalidades</p>
                         <ul class="dropdown-menu">
@@ -40,6 +41,7 @@
                             </li>
                         </ul>
                     </li>
+                    {% endif %}
                     {% if not user.is_authenticated %}
                         <li class="nav-item ms-auto">
                             <a class="nav-link active" href="{% url "user_login" %}"><i class="bi bi-person-circle"></i> Entrar</a>

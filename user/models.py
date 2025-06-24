@@ -9,7 +9,6 @@ from .validar_info import (
     validate_cpf,
     validate_cgm,
     validate_phone,
-    validate_password,
 )
 
 
@@ -18,18 +17,26 @@ class User(AbstractUser):
     FUNCIONARIO = 1
     BIBLIOTECARIO = 2
 
-    USER_TYPES = [
+    USERS_TYPES_LIST = [
         (LEITOR, "Leitor"),
         (FUNCIONARIO, "Funcionário"),
         (BIBLIOTECARIO, "Bibliotecário"),
     ]
 
     type_user = models.PositiveSmallIntegerField(
-        choices=USER_TYPES, default=LEITOR, verbose_name="Tipo de Usuário"
+        choices=USERS_TYPES_LIST, default=LEITOR, verbose_name="Tipo de Usuário"
+    )
+
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        verbose_name="Nome",
+        validators=[validate_name],
+        help_text="Esse nome ficará no banco de dados da Secretaria de Educação do Paraná",
     )
     cpf = models.CharField(
         max_length=11,
-        unique=True,
+        primary_key=True,
         verbose_name="CPF",
         validators=[MinLengthValidator(11), validate_cpf],
         help_text="Não use pontos nem traços",
@@ -49,6 +56,21 @@ class User(AbstractUser):
         validators=[validate_cgm],
         help_text="Código Geral de Matrícula (10 dígitos)",
     )
+
+    REQUIRED_FIELDS = ["email", "phone", "cpf"]
+
+    class Meta:
+        verbose_name = "Usuário"
+        verbose_name_plural = "Usuários"
+        permissions = [
+            ("gerenciar_catalogo", "Pode gerenciar o catálogo de livros"),
+            ("gerenciar_emprestimos", "Pode gerenciar empréstimos e reservas"),
+            ("gerenciar_usuarios", "Pode gerenciar cadastros de usuários"),
+            ("visualizar_catalogo", "Pode visualizar o catálogo de livros"),
+            ("acompanhar_emprestimos", "Pode acompanhar empréstimos e reservas"),
+            ("realizar_emprestimos", "Pode realizar empréstimos e reservas"),
+            ("editar_proprio_perfil", "Pode editar próprio perfil e senha"),
+        ]
 
     def __str__(self):
         return self.username

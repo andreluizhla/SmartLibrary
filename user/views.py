@@ -1,5 +1,5 @@
 # Modelos
-from django.views.generic import ListView, UpdateView, DeleteView
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 
 # Métodos para deslogar, logar, autenticar e cadastro
 from django.contrib.auth import views, logout, login, authenticate
@@ -15,7 +15,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 # Modelos do APP User
-from .forms import UserForm, UserRegistrationForm
+from .forms import UserUpdateForm, UserRegistrationForm, UserNewPassword
 from .models import User
 
 
@@ -38,21 +38,41 @@ class UserListView(ListView):
         return context
 
 
-# class UserCreateView(CreateView):
-#     model = User
-#     form_class = UserForm
-#     template_name = "user/user_form.html"
-#     success_url = reverse_lazy("user_list")
+class UserCreateView(CreateView):
+    model = User
+    form_class = UserRegistrationForm
+    template_name = "user/register.html"
+    success_url = reverse_lazy("user_list")
 
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Usuário cadastrado com sucesso!")
-#         return response
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Usuário cadastrado com sucesso!")
+        return response
+
+
+def password(request):
+    if request.method == "POST":
+        form = UserNewPassword(request.POST)
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        novasenha = request.POST.get("novasenha")
+
+        user = User.objects.get(username=username)
+        user.set_password(novasenha)
+        user.save()
+        messages.success(request, "Senha alterada com sucesso!")
+    else:
+
+        form = UserNewPassword(user=request.user)
+        # messages.success(request, "Dados errados")
+        # return render(request, "user/password.html")
+
+    return render(request, "user/password.html", {"form": form})
 
 
 class UserUpdateView(UpdateView):
     model = User
-    form_class = UserForm
+    form_class = UserUpdateForm
     template_name = "user/user_form.html"
     success_url = reverse_lazy("user_list")
 
@@ -77,7 +97,6 @@ class UserLogin(views.LoginView):
     model = User
     success_url = reverse_lazy("user_account")
     template_name = "user/login.html"
-    # form_class = UserAuth
 
 
 # Deslogar User
