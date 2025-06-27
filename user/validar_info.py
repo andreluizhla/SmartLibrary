@@ -7,10 +7,10 @@ def validate_name(value):
 
     if re.search(r"[^a-zA-ZáãéêíóúÁÃÉÊÍÓÚñÑ\s]", name):
         raise ValidationError("O nome não pode conter números ou símbolos")
-    
+
     if len(name.split()) < 2:
         raise ValidationError("O nome deve conter um Nome e um Sobrenome")
-    
+
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
@@ -82,13 +82,6 @@ def validate_phone(value):
 
     if len(phone) == 11 and not number.startswith("9"):
         raise ValidationError("Celulares devem começar com 9 (ex: 9XXXX-XXXX)")
-
-
-def validate_password(value):
-    password = value
-
-    if len(password) < 8:
-        raise ValidationError("Coloque uma senha maior")
 
 
 ddd_list = [

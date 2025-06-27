@@ -1,8 +1,19 @@
 from django.urls import path
-from .views import UserCreateView, UserDeleteView, UserListView, UserUpdateView
+from .views import (
+    UserCreateView,
+    UserDeleteView,
+    UserListView,
+    UserUpdateView,
+    UserLogin,
+    user_logout,
+    user_account,
+    register,
+    password,
+)
 
 urlpatterns = [
     path("", UserListView.as_view(), name="user_list"),
+    path("account/", user_account, name="user_account"),
     path("create/", UserCreateView.as_view(), name="user_create"),
     path(
         "update/<str:pk>",
@@ -10,8 +21,20 @@ urlpatterns = [
         name="user_update",
     ),
     path(
+        "password/",
+        password,
+        name="password",
+    ),
+    path(
         "delete/<str:pk>",
         UserDeleteView.as_view(),
         name="user_delete",
     ),
+    path(
+        "login",
+        UserLogin.as_view(),
+        name="user_login",
+    ),
+    path("logout", user_logout, name="user_logout"),
+    path("register", register, name="user_register"),
 ]

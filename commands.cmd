@@ -17,6 +17,10 @@ pip install black
 pip install python-decouple
 pip install dj-database-url
 
+@REM Super Usuário SmartLibrary:
+@REM Adm Adm
+@REM ADM123
+
 @REM Extensão Recomendada: 
 @REM SQLite Viewer
 @REM Black Formatter
