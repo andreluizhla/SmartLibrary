@@ -2,5 +2,10 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true,
-    }
+    },
+    "python.pythonPath": ".venv\\Scripts\\python.exe", 
+    "code-runner.executorMap": { 
+        "python": "venv\\Scripts\\python.exe" 
+    },
+    "code-runner.runInTerminal": true
 }

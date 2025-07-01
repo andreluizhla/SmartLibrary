@@ -2,7 +2,7 @@
 {% block title %}Lista de Usuários{% endblock title %}
 
 {% block main_content %}
-    <h1>Lista de Usuários Cadastrados</h1>
+    <h1>Usuários Cadastrados</h1>
     {% if user_list %}
     <div class="table-responsive">
         <table class="table table-striped table-hover table-sm">
@@ -14,7 +14,6 @@
                     <th scope="col">CGM</th>
                     <th scope="col">E-MAIL</th>
                     <th scope="col">TELEFONE</th>
-                    <th scope="col">SENHA</th>
                     <th scope="col">AÇÃO</th>
                 </tr>
             </thead>
@@ -27,10 +26,9 @@
                         <td scope="row"> {{ user.cgm }} </td>
                         <td scope="row"> {{ user.email|truncatechars:20 }} </td>
                         <td scope="row"> {{ user.phone }} </td>
-                        <td scope="row"> {{ user.password|truncatechars:20 }} </td>
                         <td>
-                            <a href="{% url "user_delete" pk=user.pk %}" class="btn btn-danger btn-sm">Excluir</a>
-                            <a href="{% url "user_update" pk=user.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                            <a href="{% url "user_delete" pk=user.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                            <a href="{% url "user_update" pk=user.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

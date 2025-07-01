@@ -57,14 +57,14 @@ class CollectionItemUpdateView(UpdateView):
         # se responsável existe, coloca ele, senão, coloca Sistema
         responsavel = form.cleaned_data.get("responsavel", "Sistema")
         form.instance.responsavel_form_input = responsavel
-        return super().form_valid(form), response
+        return response  # Retorna apenas a response
 
 
 class ItemHistoryView(ListView):
     model = ItemStatusChange
     template_name = "collection_item/item_history.html"
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["history"] = self.object.status_changes.all().order_by("-changed_at")
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["history"] = self.object.status_changes.all().order_by("-changed_at")
+        return context

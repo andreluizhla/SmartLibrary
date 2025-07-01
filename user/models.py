@@ -32,7 +32,7 @@ class User(AbstractUser):
         unique=True,
         verbose_name="Nome Completo",
         validators=[validate_name],
-        help_text="Esse nome ficará no banco de dados da Secretaria de Educação do Paraná",
+        help_text="Digite seu nome e sobrenome com letra maiúscula no começo",
     )
     cpf = models.CharField(
         max_length=11,

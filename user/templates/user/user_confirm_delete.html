@@ -4,7 +4,7 @@
 
 {% block main_content %}
     <h1>Confirmar Exclusão</h1>
-    <p>Você tem certeza que deseja excluir o {{ user.type_user }} <strong>{{ user.name }}</strong>?</p>
+    <p>Você tem certeza que deseja excluir o {{ user.get_tipo_usuario_display }} <strong>{{ user.username }}</strong>?</p>
     <p><strong>ATENÇÃO: ESSA AÇÃO NÃO PODERÁ SER DESFEITA!</strong></p>
     <form method="POST">
         {% csrf_token %}

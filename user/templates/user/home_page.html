@@ -16,6 +16,6 @@
             <a href="{% url "collection_item_history" %}" class="btn btn-primary btn-lg col-5 p-2 mx-auto">Histórico de Edições</a>
         </div>
     {% else %}
-        <p>Parece que você não está logado, por favor, <a href="{% url "user_register" %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">CRIE UMA CONTA</a> ou <a href="{% url 'user_login' %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">ENTRE EM UMA CONTA EXISTENTE</a> em uma conta para acessar as funcionalidades do <strong>SmartLibrary</strong></p>
+        <p>Parece que você não está logado, por favor, <a href="{% url 'user_login' %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">ENTRE EM UMA CONTA EXISTENTE</a> para acessar as funcionalidades do <strong>SmartLibrary</strong></p>
     {% endif %}
 {% endblock main_content %}

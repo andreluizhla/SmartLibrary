@@ -3,14 +3,16 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Collection
 
 
-class CollectionListView(ListView):
+class CollectionListView(LoginRequiredMixin, ListView):
     model = Collection
 
 
-class CollectionCreateView(CreateView):
+class CollectionCreateView(LoginRequiredMixin, CreateView):
     model = Collection
     fields = ["title", "author", "year_pub", "publisher"]
     success_url = reverse_lazy("collection_list")
@@ -21,7 +23,7 @@ class CollectionCreateView(CreateView):
         return response
 
 
-class CollectionUpdateView(UpdateView):
+class CollectionUpdateView(LoginRequiredMixin, UpdateView):
     model = Collection
     fields = ["title", "author", "year_pub", "publisher"]
     success_url = reverse_lazy("collection_list")
@@ -32,7 +34,7 @@ class CollectionUpdateView(UpdateView):
         return response
 
 
-class CollectionDeleteView(DeleteView):
+class CollectionDeleteView(LoginRequiredMixin, DeleteView):
     model = Collection
     success_url = reverse_lazy("collection_list")
 

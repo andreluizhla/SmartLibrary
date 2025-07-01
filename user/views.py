@@ -2,7 +2,9 @@
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 
 # Métodos para deslogar, logar, autenticar e cadastro
-from django.contrib.auth import views, logout, login, authenticate
+from django.contrib.auth import views as auth_views, logout, login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 
 # Redirecionamento e renderização
@@ -15,7 +17,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 # Modelos do APP User
-from .forms import UserUpdateForm, UserRegistrationForm, UserNewPassword
+from .forms import UserUpdateForm, UserRegistrationForm, UserNewPassword, UserLoginForm
 from .models import User
 
 
@@ -31,7 +33,8 @@ def user_account(request):
 
 
 # CRUD do User:
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy("user_login")
     model = User
 
     def get_context_data(self, **kwargs):
@@ -41,11 +44,12 @@ class UserListView(ListView):
         return context
 
 
-class UserCreateView(CreateView):
+class UserCreateView(LoginRequiredMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
     template_name = "user/register.html"
     success_url = reverse_lazy("user_list")
+    login_url = reverse_lazy("user_login")
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -73,10 +77,11 @@ def password(request):
     return render(request, "user/password.html", {"form": form})
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserUpdateForm
     template_name = "user/user_form.html"
+    login_url = reverse_lazy("user_login")
     success_url = reverse_lazy("user_list")
 
     def form_valid(self, form):
@@ -85,8 +90,9 @@ class UserUpdateView(UpdateView):
         return response
 
 
-class UserDeleteView(DeleteView):
+class UserDeleteView(LoginRequiredMixin, DeleteView):
     model = User
+    login_url = reverse_lazy("user_login")
     success_url = reverse_lazy("user_list")
 
     def form_valid(self, form):
@@ -96,9 +102,9 @@ class UserDeleteView(DeleteView):
 
 
 # Login User
-class UserLogin(views.LoginView):
+class UserLogin(auth_views.LoginView):
     model = User
-    success_url = reverse_lazy("user_account")
+    form_class = UserLoginForm
     template_name = "user/login.html"
 
 
@@ -109,6 +115,7 @@ def user_logout(request):
 
 
 # Cadastro de User
+@login_required()
 def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)

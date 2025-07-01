@@ -27,9 +27,9 @@
                         <td> {{ item.availability }} </td>
                         <td>
                             <a href="{% url "collection_item_delete" pk=item.id_code %}" class="btn btn-danger btn-sm 
-                            {% if item.availability == "Emprestado" or item.availability == "Reservado" %}disabled{% endif %}
-                            ">Excluir</a>
-                            <a href="{% url "collection_item_update" pk=item.id_code %}" class="btn btn-primary btn-sm">Editar</a>
+                            {% if item.availability == "Emprestado" or item.availability == "Reservado" %}disabled{% endif %}"
+                            data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                            <a href="{% url "collection_item_update" pk=item.id_code %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -3,8 +3,50 @@ from django.contrib.auth.forms import (
     UserCreationForm,
     UserChangeForm,
     PasswordChangeForm,
+    AuthenticationForm,
 )
+from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate
 from .models import User
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(label="Email ou CPF")
+    password = forms.CharField(label="Senha", widget=forms.PasswordInput)
+
+    def clean(self):
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
+
+        if username is None or password is None:
+            raise ValidationError("Por favor, preencha ambos os campos.")
+
+        user = None
+        try:
+            # Verifica se é email ou CPF
+            if "@" in username:
+                user = authenticate(username=username, password=password)
+            else:
+                # Remove máscara do CPF se houver
+                cpf = "".join(filter(str.isdigit, username))
+                user = authenticate(username=cpf, password=password)
+
+            if user is None:
+                raise ValidationError(
+                    "Credenciais inválidas. Por favor, tente novamente."
+                )
+
+            self.user_cache = user
+        except Exception as e:
+            if user is None:
+                raise ValidationError(
+                    "Credenciais inválidas. Por favor, tente novamente."
+                )
+            raise ValidationError(
+                "Ocorreu um erro durante o login. Por favor, coloque um email ou CPF com senha."
+            )
+
+        return self.cleaned_data
 
 
 class UserUpdateForm(UserChangeForm):

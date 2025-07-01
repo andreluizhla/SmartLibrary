@@ -144,6 +144,11 @@ LOGOUT_REDIRECT_URL = "home_page"
 
 AUTH_USER_MODEL = "user.User"
 
+AUTHENTICATION_BACKENDS = [
+    "user.backends.EmailOrCPFBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 # Correção de Erro de mensagens
 # Se não entender, procurar o Squad Lider
 
