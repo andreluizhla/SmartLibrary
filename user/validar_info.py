@@ -69,7 +69,7 @@ def validate_phone(value):
         )
 
     if len(phone) not in (10, 11):
-        raise ValidationError("Número deve conter 10 (fixo) ou 11 (celular) dígitos")
+        raise ValidationError("Número deve conter: DDD + 8 dígitos para telefone fixo ou 9 dígitos para celular")
 
     if phone != phone_without_letters:
         raise ValidationError("Número deve conter apenas números")
