@@ -24,7 +24,10 @@ def home_page(request):
 
 
 def user_account(request):
-    return render(request, "user/user_account.html")
+    if request.user.is_authenticated:
+        return render(request, "user/user_account.html")
+    else:
+        return HttpResponseRedirect(reverse_lazy("user_list"))
 
 
 # CRUD do User:

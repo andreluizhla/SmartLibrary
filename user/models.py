@@ -30,13 +30,13 @@ class User(AbstractUser):
     username = models.CharField(
         max_length=150,
         unique=True,
-        verbose_name="Nome",
+        verbose_name="Nome Completo",
         validators=[validate_name],
         help_text="Esse nome ficará no banco de dados da Secretaria de Educação do Paraná",
     )
     cpf = models.CharField(
         max_length=11,
-        primary_key=True,
+        unique=True,
         verbose_name="CPF",
         validators=[MinLengthValidator(11), validate_cpf],
         help_text="Não use pontos nem traços",
@@ -45,7 +45,7 @@ class User(AbstractUser):
         max_length=11,
         verbose_name="Telefone",
         validators=[MinLengthValidator(10), validate_phone],
-        help_text="Digite apenas números, sem pontuações ou espaços.",
+        help_text="Digite seu número de celular ou telefone fixo, adicione também seu DDD.",
     )
     cgm = models.CharField(
         max_length=10,
@@ -56,7 +56,7 @@ class User(AbstractUser):
         validators=[validate_cgm],
         help_text="Código Geral de Matrícula (10 dígitos)",
     )
-
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "phone", "cpf"]
 
     class Meta:
