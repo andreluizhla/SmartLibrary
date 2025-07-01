@@ -15,6 +15,7 @@ from django.http import HttpResponseRedirect
 
 # Exibir mensagens
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
 # Modelos do APP User
 from .forms import UserUpdateForm, UserRegistrationForm, UserNewPassword, UserLoginForm
@@ -56,8 +57,21 @@ class UserCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Usuário cadastrado com sucesso!")
         return response
 
+    def dispatch(self, request, *args, **kwargs):
+        if (
+            not request.user.is_superuser
+            or request.user.type_user != User.BIBLIOTECARIO
+        ):
+            messages.warning(
+                request,
+                "Atenção: Essa área é restria apenas para os Bilbiotecários ou Administradores",
+            )
+            return HttpResponseRedirect(reverse_lazy("home_page"))
+        return super().dispatch(request, *args, **kwargs)
+
 
 def password(request):
+    context_object_name = "user_being_edited"
     if request.method == "POST":
         form = UserNewPassword(request.POST)
         username = request.POST.get("username")
@@ -71,10 +85,12 @@ def password(request):
     else:
 
         form = UserNewPassword(user=request.user)
-        # messages.success(request, "Dados errados")
-        # return render(request, "user/password.html")
 
-    return render(request, "user/password.html", {"form": form})
+    return render(
+        request,
+        "user/password.html",
+        {"form": form, "context_object_name": context_object_name},
+    )
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
@@ -83,11 +99,24 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "user/user_form.html"
     login_url = reverse_lazy("user_login")
     success_url = reverse_lazy("user_list")
+    context_object_name = "user_being_edited"
 
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, "Usuário atualizado com sucesso!")
         return response
+
+    def dispatch(self, request, *args, **kwargs):
+        if (
+            not request.user.is_superuser
+            or request.user.type_user != User.BIBLIOTECARIO
+        ):
+            messages.warning(
+                request,
+                "Atenção: Essa área é restria apenas para os Bilbiotecários ou Administradores",
+            )
+            return HttpResponseRedirect(reverse_lazy("home_page"))
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserDeleteView(LoginRequiredMixin, DeleteView):

@@ -13,6 +13,7 @@
 @REM Comandos CMD:
 pip install django
 pip install crispy-bootstrap5
+pip install django-view-breadcrumbs
 pip install black
 pip install python-decouple
 pip install dj-database-url
