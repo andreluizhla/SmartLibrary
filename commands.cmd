@@ -18,6 +18,9 @@ pip install black
 pip install python-decouple
 pip install dj-database-url
 
+@REM Para o Backup do SQLite:
+@REM python manage.py dumpdata > datadump.json
+
 @REM Super Usuário SmartLibrary:
 @REM Adm Adm
 @REM ADM123

@@ -64,11 +64,12 @@ class CollectionItem(models.Model):
             try:
                 original = CollectionItem.objects.get(pk=self.pk)
                 if original.availability != self.availability:
+                    changed_by = getattr(self, "responsavel_form_input", "Sistema")
                     ItemStatusChange.objects.create(
                         item=self,
                         previous_status=original.availability,
                         new_status=self.availability,
-                        changed_by=getattr(self, "responsavel_form_input", "Sistema"),
+                        changed_by=changed_by,
                     )
             except CollectionItem.DoesNotExist:
                 pass
@@ -83,7 +84,7 @@ class ItemStatusChange(models.Model):
     new_status = models.CharField(max_length=10, verbose_name="Novo Status")
     changed_at = models.DateTimeField(verbose_name="Data da Alteração", default=now)
     changed_by = models.CharField(
-        max_length=100,
+        max_length=150,
         verbose_name="Responsável pela Alteração",
         blank=False,
         null=False,
@@ -96,3 +97,18 @@ class ItemStatusChange(models.Model):
 
     def __str__(self):
         return f"{self.item} alterado por {self.changed_by} em {self.changed_at}"
+
+
+class DelayPolicy(models.Model):
+    max_days = models.PositiveIntegerField(
+        verbose_name="Prazo maximo de emprestimo", null=False, blank=False
+    )
+    fine_value = models.FloatField(
+        verbose_name="Valor da multa por dias de atraso", null=False, blank=False
+    )
+    delay_tolerance = models.PositiveIntegerField(
+        verbose_name="Tolerância de atraso", null=True, blank=True
+    )
+    item_limits = models.PositiveIntegerField(
+        verbose_name="Limite de itens simultâneos", null=False, blank=False
+    )
