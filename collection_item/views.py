@@ -6,9 +6,10 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import CollectionItemForm
-from .models import CollectionItem, ItemStatusChange
+from .models import CollectionItem, ItemStatusChange, DelayPolicy
 
 
+# CRUD CollectionList
 class CollectionItemListView(ListView):
     model = CollectionItem
 
@@ -44,27 +45,30 @@ class CollectionItemDeleteView(DeleteView):
         return response
 
 
-class CollectionItemUpdateView(UpdateView):
+class CollectionItemUpdateView(LoginRequiredMixin, UpdateView):
     model = CollectionItem
     form_class = CollectionItemForm
     template_name = "collection_item/collectionitem_form.html"
     success_url = reverse_lazy("collection_item_list")
 
     def form_valid(self, form):
-        # mensagem
+        form.instance.responsavel_form_input = (
+            self.request.user.username or self.request.user.get_full_name()
+        )
         response = super().form_valid(form)
         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
         # se responsável existe, coloca ele, senão, coloca Sistema
         responsavel = form.cleaned_data.get("responsavel", "Sistema")
         form.instance.responsavel_form_input = responsavel
-        return response  # Retorna apenas a response
+        return response
 
 
+# ItemHistory View
 class ItemHistoryView(ListView):
     model = ItemStatusChange
     template_name = "collection_item/item_history.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["history"] = self.object.status_changes.all().order_by("-changed_at")
-        return context
+
+# CRUD do DelayPolicy:
+class DelayPolicyListView(ListView):
+    model = DelayPolicy

@@ -4,6 +4,6 @@
 
 {% block main_content %}
     <h1>Olá {% if user.first_name %}{{user.first_name|upper}}{% else %}{{user}}{% endif %}!</h1>
-    <p>Você é um {user.get_tipo_usuario_display}</p>
+    <p>Você é um {{user.get_tipo_usuario_display}}</p>
     <p>Se quiser voltar para a página principal, <a href="{% url 'home_page' %}">Clique Aqui</a></p>
 {% endblock main_content %}

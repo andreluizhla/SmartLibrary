@@ -5,6 +5,7 @@ from .views import (
     CollectionItemListView,
     CollectionItemUpdateView,
     ItemHistoryView,
+    DelayPolicyListView,
 )
 
 urlpatterns = [
@@ -32,5 +33,10 @@ urlpatterns = [
         "history",
         ItemHistoryView.as_view(),
         name="collection_item_history",
+    ),
+    path(
+        "delay-policy",
+        DelayPolicyListView.as_view(),
+        name="delay_policy_list",
     ),
 ]
