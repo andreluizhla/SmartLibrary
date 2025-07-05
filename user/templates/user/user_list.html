@@ -39,6 +39,6 @@
         <p>Parece que não tem nada...</p>
     {% endif %}
     <div>
-        <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm">Cadastrar Usuário</a>
+        <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Usuários" ><i class="bi bi-person-plus-fill"></i></a>
     </div>
 {% endblock main_content %}
