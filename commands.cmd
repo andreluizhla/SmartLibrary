@@ -18,6 +18,9 @@ pip install black
 pip install python-decouple
 pip install dj-database-url
 
+@REM Backup do banco de dados:
+@REM python manage.py dumpdata --exclude auth.permission --exclude contenttypes > datadbbackup.json
+
 @REM Super Usuário SmartLibrary:
 @REM Adm Adm
 @REM ADM123
