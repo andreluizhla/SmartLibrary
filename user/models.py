@@ -62,15 +62,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"
-        permissions = [
-            ("gerenciar_catalogo", "Pode gerenciar o catálogo de livros"),
-            ("gerenciar_emprestimos", "Pode gerenciar empréstimos e reservas"),
-            ("gerenciar_usuarios", "Pode gerenciar cadastros de usuários"),
-            ("visualizar_catalogo", "Pode visualizar o catálogo de livros"),
-            ("acompanhar_emprestimos", "Pode acompanhar empréstimos e reservas"),
-            ("realizar_emprestimos", "Pode realizar empréstimos e reservas"),
-            ("editar_proprio_perfil", "Pode editar próprio perfil e senha"),
-        ]
 
     def __str__(self):
         return self.username
