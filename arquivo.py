@@ -1,3 +1,22 @@
+# variavel = int()
+# print(variavel)
+
+
+# def soma(x, y):
+#     resultado = x + y
+#     return resultado
+
+# # int()
+# # float() -> "2" -> 2.0
+# num1 = int(input("Escreva o primeiro numero: "))
+# # texto
+# # "" -> string
+# # "1" + "2" -> "12"
+# num2 = int(input("Escreva o segundo numero: "))
+# print(soma(num1, num2))
+
+# def win()
+
 # "Palavra" + "Algo" => "PalavraAlgo" (concatenação) (dois textos)
 # 2 + 2 = 4 (soma matemática) (dois números inteiros)
 # "2" + "2" = "22"
@@ -235,10 +254,7 @@
 # print(dicionario["item1"])
 
 
-
-
-
-# Comandos para o projeto SmartLibrary 
+# Comandos para o projeto SmartLibrary
 
 # Comandos:
 # pip install django
@@ -247,22 +263,22 @@
 # pip install black
 # pip install crispy-bootstrap5
 
-# Extensão Recomendada: 
+# Extensão Recomendada:
 # SQLite Viewer
 # Black Formatter
 # MySQL por: Database Client
 
-# { 
-#     "editor.formatOnSave": true, 
-#     "python.formatting.provider": "black", 
-#     "editor.defaultFormatter": "ms-python.black-formatter", 
-#     "files.associations": { 
-#         "**/templates/**/*.html": "django-html" 
-#     }, 
-#     "emmet.includeLanguages": { 
-#         "django-html": "html" 
-#     } 
-# } 
+# {
+#     "editor.formatOnSave": true,
+#     "python.formatting.provider": "black",
+#     "editor.defaultFormatter": "ms-python.black-formatter",
+#     "files.associations": {
+#         "**/templates/**/*.html": "django-html"
+#     },
+#     "emmet.includeLanguages": {
+#         "django-html": "html"
+#     }
+# }
 
 # Criar Ambiente Virtual
 # python -m venv .venv
@@ -276,8 +292,7 @@
 # Execute novamente o penúltimo comando
 
 
-
 # Criação de APPs:
-# django-admin startapp [Nome do APP] 
+# django-admin startapp [Nome do APP]
 # ou
 # python -m django startapp [Nome do APP]

@@ -26,8 +26,8 @@
                         <td scope="row"> {{ collection.publisher }} </td>
                         <td scope="row"> {{ collection.year_pub }} </td>
                         <td scope="row">
-                            <a href="{% url "collection_delete" pk=collection.id %}" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
-                            <a href="{% url "collection_update" pk=collection.id %}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url "collection_delete" pk=collection.id %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                            <a href="{% url "collection_update" pk=collection.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

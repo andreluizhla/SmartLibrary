@@ -40,7 +40,6 @@ class UserListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Adiciona conversão para template (opcional)
         context["tipos"] = {0: "Leitor", 1: "Funcionário", 2: "Bibliotecário"}
         return context
 
