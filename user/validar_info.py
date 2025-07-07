@@ -11,6 +11,10 @@ def validate_name(value):
     if len(name.split()) < 2:
         raise ValidationError("O nome deve conter um Nome e um Sobrenome")
 
+    # for nome in name.split():
+    #     if re.search(r"[^A-ZÁÃÂÉÈÍÌÎÓÒÕÔÚÙÛ]", nome[0]):
+    #         raise ValidationError("Cada nome teve começar com letras maiúsculas")
+
 
 def validate_cpf(value):
     cpf = re.sub(r"[^0-9]", "", value)
@@ -69,7 +73,9 @@ def validate_phone(value):
         )
 
     if len(phone) not in (10, 11):
-        raise ValidationError("Número deve conter: DDD + 8 dígitos para telefone fixo ou 9 dígitos para celular")
+        raise ValidationError(
+            "Número deve conter: DDD + 8 dígitos para telefone fixo ou 9 dígitos para celular"
+        )
 
     if phone != phone_without_letters:
         raise ValidationError("Número deve conter apenas números")

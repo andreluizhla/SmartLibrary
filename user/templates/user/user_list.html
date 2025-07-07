@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Lista de Usuários{% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Usuários</li>
+    </ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>Usuários Cadastrados</h1>
     {% if user_list %}
@@ -10,26 +17,43 @@
                 <tr>
                     <th scope="col">TIPO</th>
                     <th scope="col">NOME</th>
+                    <th scope="col">STATUS</th>
                     <th scope="col">CPF</th>
                     <th scope="col">CGM</th>
                     <th scope="col">E-MAIL</th>
                     <th scope="col">TELEFONE</th>
-                    <th scope="col">AÇÃO</th>
+                    {% if user.type_user == 2 %}<th scope="col">AÇÃO</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
-                {% for user in user_list %}
+                {% for usuario in user_list %}
                     <tr>
-                        <td scope="row"> {{ user.get_tipo_usuario_display }} </td>
-                        <td scope="row"> {{ user.username|truncatechars:50 }} </td>
-                        <td scope="row"> {{ user.cpf }} </td>
-                        <td scope="row"> {{ user.cgm }} </td>
-                        <td scope="row"> {{ user.email|truncatechars:20 }} </td>
-                        <td scope="row"> {{ user.phone }} </td>
+                        <td>{{ usuario.get_tipo_usuario_display }}</td>
+                        <td>{{ usuario.username|truncatechars:50 }}</td>
                         <td>
-                            <a href="{% url "user_delete" pk=user.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
-                            <a href="{% url "user_update" pk=user.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                            <span class="badge bg-{% if usuario.status == 0 %}success{% elif usuario.status == 1 %}danger{% else %}warning{% endif %}">
+                                {{ usuario.get_status_display }}
+                            </span>
                         </td>
+                        <td>{{ usuario.cpf_formatted }}</td>
+                        <td>{{ usuario.cgm }}</td>
+                        <td>{{ usuario.email|truncatechars:20 }}</td>
+                        <td>{{ usuario.phone_formatted }}</td>
+                        {% if user.type_user == 2 %}
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'user_update' pk=usuario.pk %}" class="btn btn-sm btn-primary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'user_password' %}?user_id={{usuario.pk}}" class="btn btn-sm btn-warning" title="Resetar Senha">
+                                    <i class="bi bi-key"></i>
+                                </a>
+                                <a href="{% url 'user_delete' pk=usuario.pk %}" class="btn btn-sm btn-danger" title="Excluir">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -39,6 +63,6 @@
         <p>Parece que não tem nada...</p>
     {% endif %}
     <div>
-        <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Usuários" ><i class="bi bi-person-plus-fill"></i></a>
+        {% if user.type_user == 2 %}<a href="{% url 'user_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Usuários" ><i class="bi bi-person-plus-fill"></i></a>{% endif %}
     </div>
 {% endblock main_content %}

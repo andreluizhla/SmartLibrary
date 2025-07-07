@@ -1,17 +1,22 @@
 # Modelos
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views.generic import (
+    ListView,
+    UpdateView,
+    DeleteView,
+    CreateView,
+    DetailView,
+)
 
 # Métodos para deslogar, logar, autenticar e cadastro
-from django.contrib.auth import views as auth_views, logout, login, authenticate
+from django.contrib.auth import views as auth_views, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
 
 # Redirecionamento e renderização
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-
 
 # Exibir mensagens
 from django.contrib import messages
@@ -19,18 +24,34 @@ from django.core.exceptions import PermissionDenied
 
 # Modelos do APP User
 from .forms import UserUpdateForm, UserRegistrationForm, UserNewPassword, UserLoginForm
-from .models import User
+from .models import User, UserChangeLog
 
 
+@login_required
 def home_page(request):
     return render(request, "user/home_page.html")
 
 
-def user_account(request):
-    if request.user.is_authenticated:
-        return render(request, "user/user_account.html")
-    else:
-        return HttpResponseRedirect(reverse_lazy("user_list"))
+# Classe para permitir apenas usuários logados como Bibliotecário ou ADM
+class LibrarianPermissionMixin(LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if (
+            not request.user.is_authenticated
+            or request.user.type_user != User.BIBLIOTECARIO
+            or not request.user.is_superuser
+        ):
+            messages.warning(
+                request, "Acesso restrito a bibliotecários e Administradores"
+            )
+            return HttpResponseRedirect(reverse_lazy("home_page"))
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UserAccountView(LoginRequiredMixin, DetailView):
+    template_name = "user/user_account.html"
+
+    def get_object(self):
+        return self.request.user
 
 
 # CRUD do User:
@@ -44,10 +65,10 @@ class UserListView(LoginRequiredMixin, ListView):
         return context
 
 
-class UserCreateView(LoginRequiredMixin, CreateView):
+class UserCreateView(LibrarianPermissionMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
-    template_name = "user/register.html"
+    # template_name = "user/register.html"
     success_url = reverse_lazy("user_list")
     login_url = reverse_lazy("user_login")
 
@@ -56,43 +77,8 @@ class UserCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Usuário cadastrado com sucesso!")
         return response
 
-    def dispatch(self, request, *args, **kwargs):
-        if (
-            not request.user.is_superuser
-            or request.user.type_user != User.BIBLIOTECARIO
-        ):
-            messages.warning(
-                request,
-                "Atenção: Essa área é restria apenas para os Bilbiotecários ou Administradores",
-            )
-            return HttpResponseRedirect(reverse_lazy("home_page"))
-        return super().dispatch(request, *args, **kwargs)
 
-
-def password(request):
-    context_object_name = "user_being_edited"
-    if request.method == "POST":
-        form = UserNewPassword(request.POST)
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        novasenha = request.POST.get("novasenha")
-
-        user = User.objects.get(username=username)
-        user.set_password(novasenha)
-        user.save()
-        messages.success(request, "Senha alterada com sucesso!")
-    else:
-
-        form = UserNewPassword(user=request.user)
-
-    return render(
-        request,
-        "user/password.html",
-        {"form": form, "context_object_name": context_object_name},
-    )
-
-
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(LibrarianPermissionMixin, UpdateView):
     model = User
     form_class = UserUpdateForm
     template_name = "user/user_form.html"
@@ -101,21 +87,19 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     context_object_name = "user_being_edited"
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        if form.has_changed():
+            for field in form.changed_data:
+                if field != "password":
+                    UserChangeLog.objects.create(
+                        user=self.object,
+                        changed_by=self.request.user,
+                        field_changed=field,
+                        old_value=str(getattr(self.object, field)),
+                        new_value=str(form.cleaned_data[field]),
+                        change_type="update",
+                    )
         messages.success(self.request, "Usuário atualizado com sucesso!")
-        return response
-
-    def dispatch(self, request, *args, **kwargs):
-        if (
-            not request.user.is_superuser
-            or request.user.type_user != User.BIBLIOTECARIO
-        ):
-            messages.warning(
-                request,
-                "Atenção: Essa área é restria apenas para os Bilbiotecários ou Administradores",
-            )
-            return HttpResponseRedirect(reverse_lazy("home_page"))
-        return super().dispatch(request, *args, **kwargs)
+        return super().form_valid(form)
 
 
 class UserDeleteView(LoginRequiredMixin, DeleteView):
@@ -142,23 +126,38 @@ def user_logout(request):
     return HttpResponseRedirect(reverse_lazy("home_page"))
 
 
-# Cadastro de User
-@login_required()
-def register(request):
+# Alterar Senha
+@login_required
+def password(request):
+    user_id = request.GET.get("user_id")
+    user_being_edited = get_object_or_404(User, pk=user_id) if user_id else request.user
+
+    if not (
+        request.user.is_superuser
+        or request.user.type_user == User.BIBLIOTECARIO
+        or user_being_edited == request.user
+    ):
+        raise PermissionDenied
+
     if request.method == "POST":
-        form = UserRegistrationForm(request.POST)
+        form = UserNewPassword(user_being_edited, request.POST)
         if form.is_valid():
             user = form.save()
-
-            # Autentica e loga o usuário
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=password)
-            login(request, user)
-
-            messages.success(request, "Cadastro realizado com sucesso!")
-            return redirect("home_page")
+            UserChangeLog.objects.create(
+                user=user,
+                changed_by=request.user,
+                field_changed="password",
+                old_value="",
+                new_value="",
+                change_type="password_change",
+            )
+            messages.success(request, "Senha alterada com sucesso!")
+            return HttpResponseRedirect(reverse_lazy("user_list"))
     else:
-        form = UserRegistrationForm()
+        form = UserNewPassword(user=user_being_edited)
 
-    return render(request, "user/register.html", {"form": form})
+    return render(
+        request,
+        "user/password.html",
+        {"form": form, "user_being_edited": user_being_edited},
+    )

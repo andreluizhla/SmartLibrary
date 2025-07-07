@@ -4,8 +4,14 @@
     Página Inicial
 {% endblock title %}
 
+{% comment %} {% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Início</li>
+    </ol>
+{% endblock breadcrumbs %} {% endcomment %}
+
 {% block main_content %}
-    <h1 class="pt-4">SmartLibrary</h1>
+    <h1>SmartLibrary</h1>
     <p>Seja bem vindo à página inicial do <strong>SmartLibrary</strong> &#x1F600 !</p>
     {% if user.is_authenticated %}
         <h2>Funcionalidades em produção...</h2>

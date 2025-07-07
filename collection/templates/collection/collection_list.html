@@ -6,6 +6,9 @@
 
 {% block main_content %}
     <h1>Acervos Cadastrados</h1>
+    {% for crum in breadcrums %}
+        <a href="{{ crum.url }}">{{ crum.slug }}</a>
+    {% endfor %}
     {% if collection_list %}
     <div class="table-responsive">
         <table class="table table-striped table-hover table-sm">

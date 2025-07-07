@@ -2,8 +2,25 @@
 
 {% block title %}Perfil - {{ user }}{% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Meu Usuário</li>
+    </ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>Olá {% if user.first_name %}{{user.first_name|upper}}{% else %}{{user}}{% endif %}!</h1>
-    <p>Você é um {{user.get_tipo_usuario_display}}</p>
-    <p>Se quiser voltar para a página principal, <a href="{% url 'home_page' %}">Clique Aqui</a></p>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Informações do Perfil</h5>
+            <p><strong>Tipo:</strong> {{user.get_tipo_usuario_display}}</p>
+            <p><strong>Status:</strong> {{user.get_status_display}}</p>
+            <p><strong>CPF:</strong> {{user.cpf_formatted}}</p>
+            <p><strong>Email:</strong> {{user.email}}</p>
+            <p><strong>Telefone:</strong> {{user.phone_formatted}}</p>
+            {% if user.cgm %}<p><strong>CGM:</strong> {{user.cgm}}</p>{% endif %}
+        </div>
+    </div>
+    {% comment %} <p>Se quiser voltar para a página principal, <a href="{% url 'home_page' %}">Clique Aqui</a></p> {% endcomment %}
 {% endblock main_content %}

@@ -5,15 +5,14 @@ from .views import (
     UserListView,
     UserUpdateView,
     UserLogin,
+    UserAccountView,
     user_logout,
-    user_account,
-    register,
     password,
 )
 
 urlpatterns = [
     path("", UserListView.as_view(), name="user_list"),
-    path("account/", user_account, name="user_account"),
+    path("account/", UserAccountView.as_view(), name="user_account"),
     path("create/", UserCreateView.as_view(), name="user_create"),
     path(
         "update/<str:pk>",
@@ -23,7 +22,7 @@ urlpatterns = [
     path(
         "password/",
         password,
-        name="password",
+        name="user_password",
     ),
     path(
         "delete/<str:pk>",
@@ -36,5 +35,4 @@ urlpatterns = [
         name="user_login",
     ),
     path("logout", user_logout, name="user_logout"),
-    path("register", register, name="user_register"),
 ]

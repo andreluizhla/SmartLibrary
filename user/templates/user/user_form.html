@@ -3,36 +3,49 @@
 
 {% block title %}{% if user_being_edited.pk %}Editor{% else %}Cadastro{% endif %} de Usuário{% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item"><a href="{% url "user_list" %}">Usuários</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% if user_being_edited.pk or user_being_edited.pk == 0 %}Editar{% else %}Cadastrar{% endif %}</li>
+    </ol>
+{% endblock breadcrumbs %}
+
+
 {% block main_content %}
-<h1>{% if user_being_edited.pk %}Editor{% else %}Cadastro{% endif %} de Usuário</h1>
+<h1>{% if user_being_edited.pk or user_being_edited.pk == 0 %}Editor{% else %}Cadastro{% endif %} de Usuário</h1>
     <form method="POST" id="userForm">
         {% csrf_token %}
         {{ form|crispy }} 
         <button class="btn btn-primary" type="submit">{% if user.pk %}<i class="bi bi-floppy2-fill"></i> Salvar{% else %}Enviar{% endif %}</button>
     </form>
     <script>
-        function mostrarCamposUsuarios() {
-            const type_user = document.getElementById("id_type_user").value;
-            const cgmField = document.getElementById("div_id_cgm");
-            const cgmInput = document.getElementById("id_cgm");
-        
-            if (type_user === '0') {
-                cgmField.style.display = "block";
-                cgmInput.required = true;
-            } else {
-                cgmField.style.display = "none";
-                cgmInput.required = false;
-                cgmInput.value = ""; // Limpa o valor quando escondido
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userTypeField = document.getElementById('id_type_user');
+            const cgmField = document.getElementById('div_id_cgm');
+            
+            function toggleCgmField() {
+                if (userTypeField.value === '0') { // Leitor
+                    cgmField.style.display = 'block';
+                } else {
+                    cgmField.style.display = 'none';
+                }
+            }
+            
+            // Inicializa
+            toggleCgmField();
+            alterPasswordMessage();
+            
+            
+            // Atualiza quando o tipo muda
+            userTypeField.addEventListener('change', toggleCgmField);
+        });
+
+        function alterPasswordMessage(){
+            if (window.location.href.includes("update")){
+                id_password.children[0].textContent = "A senha não pode ser exibida por motivos de segurança, se quiser alterar a senha, por favor, clique no botão abaixo:"
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            mostrarCamposUsuarios();
-        
-            // Adiciona validação no submit
-            document.getElementById('userForm').addEventListener('submit', function(e) {
-                mostrarCamposUsuarios(); // Força validação antes de enviar
-            });
-        });
     </script>
 {% endblock main_content %}

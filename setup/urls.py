@@ -12,6 +12,7 @@ urlpatterns = [
     path("", home_page, name="home_page"),
     # user
     path("user/", include("user.urls")),
+    # path("user/", user.views.UserListView.as_view(), name=user.views.UserListView.list_view_name),
     # collection_item
     path("collection-item/", include("collection_item.urls")),
     # collection

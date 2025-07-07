@@ -61,7 +61,7 @@ section.container {
     /* Melhorias adicionais */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Espaçamento consistente entre elementos internos */
+    {% comment %} gap: 1.5rem; /* Espaçamento consistente entre elementos internos */ {% endcomment %}
     min-height: 400px; /* Altura mínima para conteúdo */
     max-height: 90vh; /* Evita que o container fique muito alto */
     overflow-y: auto; /* Permite scroll se o conteúdo for muito longo */
@@ -83,14 +83,16 @@ main {
 }
 
 h1 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    {% comment %} font-size: calc(1.375rem + 5vw); {% endcomment %}
 }
 
 {% endblock style %}
 
 {% block main_content %}
 <section class="container">
-    <h1>Login</h1>
+    <h1>SmartLibrary</h1>
+    <p>Faça login para acessar as funcionalidades incríveis que o site pode te oferecer!</p>
     <form action="{% url "user_login" %}" method="POST">
         {% csrf_token %}
         {{ form|crispy }}
@@ -98,4 +100,5 @@ h1 {
         <input type="hidden" name="next" value="{% url "user_account" %}">
     </form>
 </section>
+
 {% endblock main_content %}
