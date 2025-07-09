@@ -42,13 +42,13 @@
                         {% if user.type_user == 2 %}
                         <td>
                             <div class="btn-group">
-                                <a href="{% url 'user_update' pk=usuario.pk %}" class="btn btn-sm btn-primary" title="Editar">
+                                <a href="{% url 'user_update' pk=usuario.pk %}" class="btn btn-sm btn-primary" title="Editar" data-bs-toggle="tooltip" data-bs-title="Editar Usuário" >
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="{% url 'user_password' %}?user_id={{usuario.pk}}" class="btn btn-sm btn-warning" title="Resetar Senha">
+                                <a href="{% url 'user_password' %}?user_id={{usuario.pk}}" class="btn btn-sm btn-warning" title="Resetar Senha" data-bs-toggle="tooltip" data-bs-title="Resetar Senha" >
                                     <i class="bi bi-key"></i>
                                 </a>
-                                <a href="{% url 'user_delete' pk=usuario.pk %}" class="btn btn-sm btn-danger" title="Excluir">
+                                <a href="{% url 'user_delete' pk=usuario.pk %}" class="btn btn-sm btn-danger" title="Excluir" data-bs-toggle="tooltip" data-bs-title="Excluir Usuário" >
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
