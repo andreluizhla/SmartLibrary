@@ -52,9 +52,9 @@ class CollectionItem(models.Model):
     )
 
     class Meta:
-        ordering = ["title"]
         verbose_name = "Item do Acervo"
         verbose_name_plural = "Itens do Acervo"
+        ordering = ["title"]
 
     def __str__(self):
         return f"{self.title} ({self.id_code})"

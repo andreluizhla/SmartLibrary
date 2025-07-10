@@ -2,12 +2,43 @@
 {% load crispy_forms_tags %}
 
 {% block title %}Cadastro de Acervo{% endblock title %}
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item"><a href="{% url "collection_list" %}">Acervo</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% if collection.pk %}Editor{% else %}Cadastro{% endif %}</li>
+    </ol>
+{% endblock breadcrumbs %}
 
 {% block main_content %}
-    <h1>Cadastro de Acervo</h1>
+    <h1>{% if collection.pk %}Editor{% else %}Cadastro{% endif %} de Acervo</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="submit" class="btn btn-primary button-jump" data-bs-toggle="tooltip" data-bs-title="Salvar Acervo"><i class="bi bi-floppy"></i></button>
+        <a href="{% url 'collection_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-box-arrow-right"></i></a>
+        {% if collection.pk %}
+            <a href="{% url 'collection_delete' collection.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        {% endif %}
     </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const collectionTypeSelect = document.getElementById("id_collection_type")
+            const collectionIdLabel = document.querySelector("label[for='id_collection_id']")
+            const collectionNameLabel = document.querySelector("label[for='id_name']")
+
+            function updateCollectionIdLabel() {
+                if (collectionTypeSelect.value == "0") { // Se o tipo for LIVRO
+                    collectionIdLabel.innerHTML = "\n                Código de Catálogo<span class=\"asteriskField\">*</span> "
+                    collectionNameLabel.innerHTML = "\n                Título do Acervo<span class=\"asteriskField\">*</span> "
+                } else { // Se o tipo for outro
+                    // Exemplo: Chromebook, Tablet, etc.
+                    collectionIdLabel.innerHTML = "\n               Número de Série<span class=\"asteriskField\">*</span> "
+                    collectionNameLabel.innerHTML = "\n                Marca/Modelo<span class=\"asteriskField\">*</span> "
+                }
+            }
+            updateCollectionIdLabel() // Atualiza o rótulo no carregamento da página
+            collectionTypeSelect.addEventListener("change", updateCollectionIdLabel)
+            })
+    </script>
 {% endblock main_content %}

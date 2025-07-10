@@ -58,6 +58,16 @@ class CollectionItemForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-select"}),
     )
 
+    responsavel = forms.CharField(
+        label="Nome do Responsável",
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Seu nome completo"}
+        ),
+        validators=[validate_name],
+    )
+
     def clean(self):
         cleaned_data = super(CollectionItemForm, self).clean()
         preservation = self.cleaned_data.get("preservation")

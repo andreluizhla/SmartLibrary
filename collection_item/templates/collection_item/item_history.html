@@ -2,6 +2,14 @@
 
 {% block title %}Histório de Mudanças{% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="{% url "collection_item_list" %}">Itens Acervo</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Histórico</li>
+    </ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>Histórico de Mundanças dos Itens</h1>
     {% if itemstatuschange_list %}

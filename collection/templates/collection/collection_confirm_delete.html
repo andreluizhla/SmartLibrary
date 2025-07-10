@@ -2,10 +2,18 @@
 
 {% block title %}Excluir Acervo{% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="{% url "collection_list" %}">Acervo</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Excluir</li>
+    </ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>Excluir Item Acervo</h1>
         <p>Você tem certeza que quer excluir o seguinte acervo?</p>
-        <p>Nome: <strong>{{ collection.title }}</strong></p>
+        <p>Nome: <strong>{{ collection.name }}</strong></p>
         <p>Autor: <strong>{{ collection.author }}</strong></p>
         <p>Editora: <strong>{{ collection.publisher }}</strong></p>
         <p>Ano de Publicação: <strong>{{ collection.year_pub }}</strong></p>

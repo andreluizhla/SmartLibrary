@@ -4,6 +4,13 @@
     Lista de Acervos
 {% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Acervo</li>
+    </ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>Acervos Cadastrados</h1>
     {% for crum in breadcrums %}
@@ -14,23 +21,31 @@
         <table class="table table-striped table-hover table-sm">
             <thead>
                 <tr>
+                    <th scope="col">CÓDIGO</th>
+                    <th scope="col">TIPO</th>
                     <th scope="col">TÍTULO</th>
                     <th scope="col">AUTOR</th>
                     <th scope="col">EDITORA</th>
                     <th scope="col">ANO DE PUBLICAÇÃO</th>
+                    <th scope="col">RESPONSÁVEL</th>
                     <th scope="col">AÇÃO</th>
                 </tr>
             </thead>
             <tbody>
                 {% for collection in collection_list %}
                     <tr>
-                        <td scope="row"> {{ collection.title|truncatechars:50 }} </td>
+                        <td scope="row"> {{ collection.pk|truncatechars:20 }} </td>
+                        <td scope="row"> {{ collection.get_type_display }} </td>
+                        <td scope="row"> {{ collection.name|truncatechars:50 }} </td>
                         <td scope="row"> {{ collection.author|truncatechars:20 }} </td>
                         <td scope="row"> {{ collection.publisher }} </td>
                         <td scope="row"> {{ collection.year_pub }} </td>
+                        <td scope="row"> {{ collection.responsible_person }} </td>
                         <td scope="row">
-                            <a href="{% url "collection_delete" pk=collection.id %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
-                            <a href="{% url "collection_update" pk=collection.id %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                            <div class="btn-group">
+                                <a href="{% url "collection_update" pk=collection.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url "collection_delete" pk=collection.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -41,6 +56,6 @@
         <p>Parece que não tem nada...</p>
     {% endif %}
     <div>
-        <a href="{% url 'collection_create' %}" class="btn btn-primary btn-sm">Cadastrar Acervo</a>
+        {% if user.type_user == 2 %}<a href="{% url 'collection_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastro de Acervo"><i class="bi bi-plus-circle"></i></a>{% endif %}
     </div>
 {% endblock main_content %}

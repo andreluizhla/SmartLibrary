@@ -14,7 +14,7 @@
             font-family: "Outfit", sans-serif;
         }
         :root {
-            --primary-color: rgb(36, 132, 197);
+            --primary-color: #2484c5;
             --secondary-color: #f8f9fa;
         }
         
@@ -44,24 +44,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 20%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
         header {
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 1rem 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: space-between;
@@ -79,21 +64,21 @@
         /* Área principal */
         main {
             flex: 1;
-            padding: 2rem;
+            padding: 1rem 2rem;
             background-color: rgba(255, 255, 255, 0.9);
             margin: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        {% comment %} /* Footer */
+        /* Footer */
         footer {
             background-color: rgba(0, 0, 0, 0.8);
             color: white;
             text-align: center;
-            padding: 1rem;
-            font-size: 0.9rem;
-        } {% endcomment %}
+            padding: 0.7rem 0 0 0;
+            font-size: 0.8rem;
+        }
 
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -112,45 +97,49 @@
     </style>
 </head>
 <body>
-    {% comment %} Barra de Navegação {% endcomment %}
-    <nav class="navbar navbar-expand-sm bg-body-tertiary p-3" data-bs-theme="dark">
+    <header>
+        <nav class="navbar navbar-expand-sm" data-bs-theme="dark" style="width: -webkit-fill-available;">
+        {% comment %} Barra de Navegação {% endcomment %}
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url "home_page" %}">SmartLibrary</a> <!--Página principal-->
+                <div class="logo">
+                    <a class="navbar-brand" href="{% url "home_page" %}"><i class="bi bi-book-half"></i> SmartLibrary</a>
+                </div>
+                {% comment %} Botão para responsividade {% endcomment %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            {% comment %} Botão para responsividade {% endcomment %}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            {% comment %} Links na barra de navegação {% endcomment %}
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav flex-fill align-items-center">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Funcionalidades</p>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-item">
-                                    <a class="nav-link active button-jump" aria-current="page" href="{% url "user_list" %}">Usuários</a>
-                                </li>
-                                <li class="dropdown-item">
-                                    <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
-                                </li>
-                                <li class="dropdown-item">
-                                    <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
-                                </li>
-                                <li class="dropdown-item">
-                                    <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
-                                </li>
-                            </ul>
-                        </li>
-                    {% endif %}
+                {% comment %} Links na barra de navegação {% endcomment %}
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown p-2">
+                                <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Funcionalidades</p>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-item">
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "user_list" %}">Usuários</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <ul class="navbar-nav ms-lg-auto">
                         {% if not user.is_authenticated %}
-                            <li class="nav-item ms-auto">
+                            <li class="nav-item p-2">
                                 <a class="nav-link active button-jump" href="{% url "user_login" %}"><i class="bi bi-person-circle"></i> Entrar</a>
                             </li>
                         {% else %}
-                            <li class="nav-item dropdown ms-auto">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <li class="nav-item dropdown p-2">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Olá {{ user }}!                    
                                 </a>
                                 <ul class="dropdown-menu">
@@ -158,27 +147,28 @@
                                         <a href="{% url "user_account" %}"><i class="bi bi-person-fill"></i> Conta</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="{% url "user_logout" %}"><i class="fa fa-sign-out"></i> Sair</a>
+                                        <a href="{% url "user_logout" %}"><i class="bi bi-box-arrow-right"></i> Sair</a>
                                     </li>
                                 </ul>
                             </li>
                         {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    {% comment %} Lugar para aparecer as mensagens {% endcomment %}
-    {% if messages %}
-        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </ul>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+            </div>
+        </nav>
+
+        {% comment %} Lugar para aparecer as mensagens {% endcomment %}
+        {% if messages %}
+            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </header>
 
     {% comment %} Conteúdo principal {% endcomment %}
     <main class="container">
@@ -192,7 +182,7 @@
 
     {% comment %} <footer>
         <p>&copy; 2025 SmartLibrary - Desenvolvido pelos alunos do 3° ano A - Técnico em Desenvolvimento de Sistemas</p>
-        <p class="credits">TCC | Orientação: Professor Charles</p>
+        <p class="credits">TCC | Orientação: Charles Adriano dos Santos</p>
     </footer> {% endcomment %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>

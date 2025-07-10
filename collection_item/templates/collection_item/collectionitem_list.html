@@ -4,6 +4,13 @@
     Itens Acervo
 {% endblock title %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Itens Acervo</li>
+    </ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>Itens Acervo</h1>
     {% if collectionitem_list %}
@@ -26,10 +33,12 @@
                         <td> {{ item.preservation }} </td>
                         <td> {{ item.availability }} </td>
                         <td>
-                            <a href="{% url "collection_item_delete" pk=item.id_code %}" class="btn btn-danger btn-sm 
-                            {% if item.availability == "Emprestado" or item.availability == "Reservado" %}disabled{% endif %}"
-                            data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
-                            <a href="{% url "collection_item_update" pk=item.id_code %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                            <div class="btn-group">
+                                <a href="{% url "collection_item_update" pk=item.id_code %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url "collection_item_delete" pk=item.id_code %}" class="btn btn-danger btn-sm
+                                {% if item.availability == "Emprestado" or item.availability == "Reservado" %}disabled{% endif %}"
+                                data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -39,5 +48,5 @@
     {% else %}
         <p>Não tem nada cadastrado ainda</p>
     {% endif %}
-    <a href="{% url "collection_item_create" %}" class="btn btn-primary btn-sm">Cadastrar Item de Acervo</a>
+    <a href="{% url "collection_item_create" %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Item de Acervo"><i class="bi bi-plus-circle"></i></a>
 {% endblock main_content %}

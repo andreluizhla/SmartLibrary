@@ -41,7 +41,7 @@ class LibrarianPermissionMixin(LoginRequiredMixin):
             or not request.user.is_superuser
         ):
             messages.warning(
-                request, "Acesso restrito a bibliotecários e Administradores"
+                request, "Acesso restrito a Bibliotecários e Administradores"
             )
             return HttpResponseRedirect(reverse_lazy("home_page"))
         return super().dispatch(request, *args, **kwargs)
