@@ -24,11 +24,10 @@
                     <th scope="col">CÓDIGO</th>
                     <th scope="col">TIPO</th>
                     <th scope="col">TÍTULO</th>
-                    <th scope="col">AUTOR</th>
-                    <th scope="col">EDITORA</th>
-                    <th scope="col">ANO DE PUBLICAÇÃO</th>
                     <th scope="col">RESPONSÁVEL</th>
-                    <th scope="col">AÇÃO</th>
+                    {% if user.type_user == 2 %}
+                        <th scope="col">AÇÃO</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -37,16 +36,15 @@
                         <td scope="row"> {{ collection.pk|truncatechars:20 }} </td>
                         <td scope="row"> {{ collection.get_type_display }} </td>
                         <td scope="row"> {{ collection.name|truncatechars:50 }} </td>
-                        <td scope="row"> {{ collection.author|truncatechars:20 }} </td>
-                        <td scope="row"> {{ collection.publisher }} </td>
-                        <td scope="row"> {{ collection.year_pub }} </td>
                         <td scope="row"> {{ collection.responsible_person }} </td>
+                        {% if user.type_user == 2 %}
                         <td scope="row">
                             <div class="btn-group">
                                 <a href="{% url "collection_update" pk=collection.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
                                 <a href="{% url "collection_delete" pk=collection.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -56,6 +54,6 @@
         <p>Parece que não tem nada...</p>
     {% endif %}
     <div>
-        {% if user.type_user == 2 %}<a href="{% url 'collection_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastro de Acervo"><i class="bi bi-plus-circle"></i></a>{% endif %}
+        {% if user.type_user == 2 %}<a href="{% url 'collection_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Acervo"><i class="bi bi-plus-circle"></i></a>{% endif %}
     </div>
 {% endblock main_content %}

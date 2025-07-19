@@ -5,101 +5,123 @@ from django.utils.timezone import now
 from .validators import id_code_validator
 
 User = get_user_model()
+# from collection.models import Collection
 
 
 class CollectionItem(models.Model):
-    ESTADO_CONSEVACAO = {
-        "Bom": "Bom",
-        "Regular": "Regular",
-        "Ruim": "Ruim",
-        "Danificado": "Danificado",
-    }
-    ESTADO_DISPONIVEL = {
-        "Disponível": "Disponível",
-        "Emprestado": "Emprestado",
-        "Reservado": "Reservado",
-    }
-    title = models.CharField(
-        verbose_name="Título da Obra",
-        max_length=50,
+    LIVRO = 0
+    NOTEBOOK = 1
+    CHROMEBOOK = 2
+    TABLET = 3
+    COLLECTION_TYPES = [
+        (LIVRO, "Livro"),
+        (NOTEBOOK, "Notebook"),
+        (CHROMEBOOK, "Chromebook"),
+        (TABLET, "Tablet"),
+    ]
+    type = models.PositiveSmallIntegerField(
+        choices=COLLECTION_TYPES,
+        default=LIVRO,
+        verbose_name="Tipo de Acervo",
         null=False,
         blank=False,
     )
-    id_code = models.CharField(
-        verbose_name="Código Identificador",
-        max_length=10,
-        primary_key=True,
-        validators=[id_code_validator],
-    )
-    preservation = models.CharField(
+
+    NOVO = 0
+    BOM = 1
+    REGULAR = 2
+    RUIM = 3
+    DANIFICADO = 4
+    ESTADO_CONSEVACAO = {
+        NOVO: "Novo",
+        BOM: "Bom",
+        REGULAR: "Regular",
+        RUIM: "Ruim",
+        DANIFICADO: "Danificado",
+    }
+    preservation = models.PositiveSmallIntegerField(
         verbose_name="Estado de Conservação",
-        max_length=10,
         choices=ESTADO_CONSEVACAO,
         null=False,
         blank=False,
+        default=NOVO,
     )
-    availability = models.CharField(
+
+    DISPONIVEL = 0
+    EMPRESTADO = 1
+    RESERVADO = 2
+    INATIVO = 3
+    ESTADO_DISPONIVEL = {
+        DISPONIVEL: "Disponível",
+        EMPRESTADO: "Emprestado",
+        RESERVADO: "Reservado",
+        INATIVO: "Inativo",
+    }
+    availability = models.PositiveSmallIntegerField(
         verbose_name="Disponibilidade",
-        max_length=10,
         choices=ESTADO_DISPONIVEL,
         null=False,
         blank=False,
-    )
-    entry_date = models.DateField(
-        auto_now_add=True,
-        null=False,
-        blank=False,
+        default=DISPONIVEL,
     )
 
     class Meta:
         verbose_name = "Item do Acervo"
         verbose_name_plural = "Itens do Acervo"
-        ordering = ["title"]
 
     def __str__(self):
         return f"{self.title} ({self.id_code})"
 
+    def preservation_display(self):
+        return self.ESTADO_CONSEVACAO.get(self.preservation, "Desconhecido")
+
+    def availability_display(self):
+        return self.ESTADO_DISPONIVEL.get(self.availability, "Desconhecido")
+
+    def type_display(self):
+        return dict(self.COLLECTION_TYPES).get(self.collection_type, "Desconhecido")
+
     def save(self, *args, **kwargs):
-        if self.pk is not None:
-            try:
-                original = CollectionItem.objects.get(pk=self.pk)
-                if original.availability != self.availability:
-                    changed_by = getattr(self, "responsavel_form_input", "Sistema")
-                    ItemStatusChange.objects.create(
-                        item=self,
-                        previous_status=original.availability,
-                        new_status=self.availability,
-                        changed_by=changed_by,
-                    )
-            except CollectionItem.DoesNotExist:
-                pass
         super().save(*args, **kwargs)
 
 
-class ItemStatusChange(models.Model):
-    item = models.ForeignKey(
-        CollectionItem, on_delete=models.CASCADE, related_name="status_changes"
-    )
-    previous_status = models.CharField(max_length=10, verbose_name="Status Anterior")
-    new_status = models.CharField(max_length=10, verbose_name="Novo Status")
-    changed_at = models.DateTimeField(verbose_name="Data da Alteração", default=now)
-    changed_by = models.CharField(
-        max_length=150,
-        verbose_name="Responsável pela Alteração",
-        blank=False,
-        null=False,
-    )
+class Book(CollectionItem):
+    isbn = models.CharField(verbose_name="ISBN", max_length=13, primary_key=True, help_text="Digite apenas números")
+    title = models.CharField(verbose_name="Título da Obra", max_length=100)
+    author = models.CharField(verbose_name="Autor da Obra", max_length=50)
+    publisher = models.CharField(verbose_name="Editora da Obra", max_length=50)
+    year_pub = models.IntegerField(verbose_name="Ano de Publicação")
 
     class Meta:
-        ordering = ["-changed_at"]
-        verbose_name = "Alteração de Status"
-        verbose_name_plural = "Alterações de Status"
+        verbose_name = "Livro"
+        verbose_name_plural = "Livros"
+        ordering = ["title"]
 
     def __str__(self):
-        return f"{self.item} alterado por {self.changed_by} em {self.changed_at}"
+        return self.title
+
+
+class Equipment(CollectionItem):
+    serial_number = models.CharField(
+        verbose_name="Número de Série", max_length=20, primary_key=True
+    )
+    brand = models.CharField(verbose_name="Marca/Modelo", max_length=100)
+    specifications = models.TextField(verbose_name="Especificações")
 
 
 class DelayPolicy(models.Model):
+    type_user = models.SmallIntegerField(
+        verbose_name="Tipo de Usuário",
+        choices=((0, "Leitor"), (1, "Funcionário")),
+        null=False,
+        blank=False,
+    )
+    type_item = models.SmallIntegerField(
+        verbose_name="Tipo de Item",
+        choices=CollectionItem.COLLECTION_TYPES,
+        null=False,
+        blank=False,
+    )
     max_days = models.PositiveIntegerField(
         verbose_name="Prazo maximo de emprestimo", null=False, blank=False
     )

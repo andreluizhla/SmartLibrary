@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if work.pk %}Editar{% else %}Cadastrar{% endif %} Obra{% endblock title %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item"><a href="{% url "work_list" %}">Obras</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% if work.pk %}Editar{% else %}Cadastrar{% endif %}</li>
+    </ol>
+{% endblock breadcrumbs %}
+
+{% block main_content %}
+    <h1>{% if work.pk %}Editar{% else %}Cadastrar{% endif %} Obra</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-title="Salvar Obra"><i class="bi bi-floppy"></i></button>
+        <a href="{% url 'work_list' %}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-arrow-left-circle"></i></a>
+        {% if work.pk %}
+            <a href="{% url 'work_delete' work.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        {% endif %}
+
+    </form>
+{% endblock main_content %}

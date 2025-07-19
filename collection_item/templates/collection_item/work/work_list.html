@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Obras{% endblock title %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Obras</li>
+    </ol>
+{% endblock breadcrumbs %}
+
+{% block main_content %}
+    <h1>Lista de Obras</h1>
+    {% if work_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">TÍTULO</th>
+                    <th scope="col">AUTOR</th>
+                    <th scope="col">EDITORA</th>
+                    <th scope="col">ANO DE PUBLICAÇÃO</th>
+                    {% if user.type_user == 2 %}
+                        <th scope="col">AÇÃO</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for work in work_list %}
+                    <tr>
+                        <td scope="row">{{ work.title|truncatechars:50 }}</td>
+                        <td>{{ work.author|truncatechars:30 }}</td>
+                        <td>{{ work.publisher|truncatechars:30 }}</td>
+                        <td>{{ work.year_pub }}</td>
+                        {% if user.type_user == 2 %}
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'work_update' pk=work.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                                    <a href="{% url 'work_delete' pk=work.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Não há obras cadastradas ainda.</p>
+    {% endif %}
+    {% if user.type_user == 2 %} <a href="{% url "work_create" %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Obra"><i class="bi bi-plus-circle"></i></a>{% endif %}
+{% endblock main_content %}

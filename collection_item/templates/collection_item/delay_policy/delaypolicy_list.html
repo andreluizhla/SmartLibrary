@@ -15,6 +15,9 @@
                     <th scope="col">VALOR DA MULTA</th>
                     <th scope="col">TOLERÂNCIA DE ATRASO</th>
                     <th scope="col">LIMITE DE ITENS</th>
+                    {% if user.type_user == 2 %}
+                        <th scope="col">AÇÕES</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -25,10 +28,12 @@
                         <td scope="row"> {{ item.fine_value }} </td>
                         <td scope="row"> {{ item.delay_tolerance }} </td>
                         <td scope="row"> {{ item.item_limits }} </td>
+                        {% if user.type_user == 2 %}
                         <td>
                             <a href="{% url "user_delete" pk=user.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
                             <a href="{% url "user_update" pk=user.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
                         </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -38,6 +43,6 @@
         <p>Parece que não tem nada...</p>
     {% endif %}
     <div>
-        <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Multa" ><i class="bi bi-plus-fill"></i></a>
+        <a href="{% url 'delay_policy_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Multa"><i class="bi bi-plus-circle"></i></a>
     </div>
 {% endblock main_content %}

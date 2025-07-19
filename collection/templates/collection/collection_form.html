@@ -16,7 +16,7 @@
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary button-jump" data-bs-toggle="tooltip" data-bs-title="Salvar Acervo"><i class="bi bi-floppy"></i></button>
-        <a href="{% url 'collection_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-box-arrow-right"></i></a>
+        <a href="{% url 'collection_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-arrow-left-circle"></i></a>
         {% if collection.pk %}
             <a href="{% url 'collection_delete' collection.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
         {% endif %}

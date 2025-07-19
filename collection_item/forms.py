@@ -1,92 +1,52 @@
 from django import forms
-from .validators import id_code_validator, validate_name
-from .models import CollectionItem
-import random
+from user.validar_info import validate_name
+from django.utils import timezone
+from .models import CollectionItem, Book, Equipment
 
 
 class CollectionItemForm(forms.ModelForm):
     class Meta:
         model = CollectionItem
         fields = "__all__"
-        widgets = {
-            "title": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Título da obra"}
-            ),
-            "entry_date": forms.DateInput(
-                attrs={"class": "form-control", "type": "date", "readonly": True}
-            ),
-        }
-        labels = {
-            "title": "Título da Obra",
-        }
-
-    ESTADO_CONSERVACAO = {
-        "Bom": "Bom",
-        "Regular": "Regular",
-        "Ruim": "Ruim",
-        "Danificado": "Danificado",
-    }
-
-    ESTADO_DISPONIVEL = {
-        "Disponível": "Disponível",
-        "Emprestado": "Emprestado",
-        "Reservado": "Reservado",
-    }
-
-    id_code = forms.CharField(
-        label="Código Identificador",
-        max_length=10,
-        validators=[id_code_validator],
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "pattern": "[0-9]{10}",
-                "title": "Apenas 10 dígitos",
-            }
-        ),
-    )
-
-    preservation = forms.ChoiceField(
-        label="Estado de Conservação",
-        choices=ESTADO_CONSERVACAO.items(),
-        widget=forms.Select(attrs={"class": "form-select"}),
-    )
-
-    availability = forms.ChoiceField(
-        label="Disponibilidade",
-        choices=ESTADO_DISPONIVEL.items(),
-        widget=forms.Select(attrs={"class": "form-select"}),
-    )
-
-    responsavel = forms.CharField(
-        label="Nome do Responsável",
-        max_length=100,
-        required=True,
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Seu nome completo"}
-        ),
-        validators=[validate_name],
-    )
 
     def clean(self):
         cleaned_data = super(CollectionItemForm, self).clean()
         preservation = self.cleaned_data.get("preservation")
         availability = self.cleaned_data.get("availability")
+        # responsible_person = self.cleaned_data.get("responsible_person")
 
-        if availability == "Emprestado" and preservation == "Danificado":
+        if (
+            availability == CollectionItem.EMPRESTADO
+            and preservation == CollectionItem.DANIFICADO
+        ):
             self.add_error(
                 "availability", "Não é possível emprestar estando Danificado"
             )
 
+        # if not responsible_person:
+        #     responsible_person = "Sistema"
+
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
         if self.instance.pk:
             self.fields["id_code"].disabled = True
-        else:
-            del self.fields["responsavel"]
+        elif self.user:
+            nome_usuario = (
+                self.user.get_full_name() or self.user.username
+            )
+            # self.fields["responsible_person"].initial = nome_usuario
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if commit:
-            instance.save()
-        return instance
+
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ["isbn", "title", "author", "publisher", "year_pub"]
+
+
+class EquipmentForm(forms.ModelForm):
+    class Meta:
+        model = Equipment
+        fields = ["serial_number", "brand", "specifications"]

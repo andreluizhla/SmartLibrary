@@ -32,11 +32,6 @@
                 50px 50px,
                 10px 10px,
                 10px 10px;
-            background-position: 
-                -2px -2px,
-                -2px -2px,
-                -1px -1px,
-                -1px -1px;
             position: relative;
             overflow-x: hidden;
             display: flex;
@@ -80,11 +75,6 @@
             font-size: 0.8rem;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
         .button-jump {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -98,7 +88,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm" data-bs-theme="dark" style="width: -webkit-fill-available;">
+        <nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="width: 100%;">
         {% comment %} Barra de Navegação {% endcomment %}
         <div class="container-fluid">
                 <div class="logo">
@@ -111,28 +101,39 @@
 
                 {% comment %} Links na barra de navegação {% endcomment %}
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav flex-fill align-items-center">
                         {% if user.is_authenticated %}
-                            <li class="nav-item dropdown p-2">
-                                <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Funcionalidades</p>
+                            {% if user.type_user == 2 %}
+                                <li class="nav-item p-2">
+                                    <a class="nav-link active button-jump" aria-current="page" href="{% url "user_list" %}">Usuários</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item dropdown">
+                                <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Biblioteca</p>
                                 <ul class="dropdown-menu">
-                                    <li class="dropdown-item">
-                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "user_list" %}">Usuários</a>
-                                    </li>
-                                    <li class="dropdown-item">
+                                    {% comment %} <li class="dropdown-item p-2">
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
+                                    </li> {% endcomment %}
+                                    <li class="dropdown-item p-2">
                                         <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
                                     </li>
-                                    <li class="dropdown-item">
-                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
-                                    </li>
-                                    <li class="dropdown-item">
-                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
-                                    </li>
+                                    {% comment %} <li class="dropdown-item p-2">
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "work_list" %}">Obras</a>
+                                    </li> {% endcomment %}
+                                    {% if user.type_user == 2 %}
+                                        <li class="dropdown-item p-2">
+                                            <a class="nav-link active button-jump" aria-current="page" href="{% url "delay_policy_list" %}">Política de Multas</a>
+                                        </li>
+                                        {% comment %} <li class="nav-item p-2">
+                                            <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
+                                        </li> {% endcomment %}
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}
                     </ul>
-                    <ul class="navbar-nav ms-lg-auto">
+
+                    <ul class="navbar-nav ms-auto">
                         {% if not user.is_authenticated %}
                             <li class="nav-item p-2">
                                 <a class="nav-link active button-jump" href="{% url "user_login" %}"><i class="bi bi-person-circle"></i> Entrar</a>
@@ -142,12 +143,12 @@
                                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Olá {{ user }}!                    
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu dropdown-menu-end">
                                     <li class="dropdown-item">
-                                        <a href="{% url "user_account" %}"><i class="bi bi-person-fill"></i> Conta</a>
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "user_account" %}"><i class="bi bi-person-fill"></i> Conta</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="{% url "user_logout" %}"><i class="bi bi-box-arrow-right"></i> Sair</a>
+                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "user_logout" %}"><i class="bi bi-box-arrow-right"></i> Sair</a>
                                     </li>
                                 </ul>
                             </li>
@@ -168,6 +169,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+
     </header>
 
     {% comment %} Conteúdo principal {% endcomment %}

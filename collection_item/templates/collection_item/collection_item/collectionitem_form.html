@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if collectionitem.pk %}Editar{% else %}Cadastrar{% endif %} Item Acervo
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="{% url "collection_item_list" %}">Itens Acervo</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% if collectionitem.pk %}Editar{% else %}Cadastrar{% endif %}</li>
+    </ol>
+{% endblock breadcrumbs %}
+
+{% block main_content %}
+    <h1>{% if collectionitem.pk %}Editar{% else %}Cadastrar{% endif %} Item de Acervo</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ item_form|crispy }}
+        <div id="id_book_form">
+            {{ book_form|crispy }}
+        </div>
+        <div id="id_equipment_form" style="display: none;">
+            {{ equipment_form|crispy }}
+        </div>
+        <button type="submit" class="btn btn-primary button-jump" data-bs-toggle="tooltip" data-bs-title="Salvar Item"><i class="bi bi-floppy"></i></button>
+        <a href="{% url 'collection_item_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-arrow-left-circle"></i></a>
+        {% if collectionitem.pk %}
+            <a href="{% url 'collection_item_delete' collectionitem.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        {% endif %}
+    </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const collectionItemTypeField = document.getElementById("id_type");
+            const bookForm = document.getElementById("id_book_form");
+            const equipmentForm = document.getElementById("id_equipment_form");
+
+            function toggleTypeField() {
+                if (collectionItemTypeField.value == '0') { // Se o tipo for Livro
+                    bookForm.style.display = 'block';
+                    equipmentForm.style.display = 'none';
+                    // Torna campos de livro obrigatórios e de equipamento não obrigatórios
+                    bookForm.querySelectorAll('input, select, textarea').forEach(function(el) {
+                        el.required = true;
+                    });
+                    equipmentForm.querySelectorAll('input, select, textarea').forEach(function(el) {
+                        el.required = false;
+                    });
+                } else {
+                    bookForm.style.display = 'none';
+                    equipmentForm.style.display = 'block';
+                    // Torna campos de equipamento obrigatórios e de livro não obrigatórios
+                    equipmentForm.querySelectorAll('input, select, textarea').forEach(function(el) {
+                        el.required = true;
+                    });
+                    bookForm.querySelectorAll('input, select, textarea').forEach(function(el) {
+                        el.required = false;
+                    });
+                }
+            }
+
+            toggleTypeField();
+            
+            collectionItemTypeField.addEventListener('change', toggleTypeField);
+        });
+    </script>
+{% endblock main_content %}

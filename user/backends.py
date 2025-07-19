@@ -1,3 +1,4 @@
+# Arquivo para autenticação personalizada por email ou CPF
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 

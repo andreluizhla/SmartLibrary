@@ -11,13 +11,16 @@
 {% endblock breadcrumbs %}
 
 {% block main_content %}
-    <h1>Histórico de Mundanças dos Itens</h1>
+    <h1>Mundança dos Itens</h1>
     {% if itemstatuschange_list %}
     <div class="table-responsive">
         <table class="table table-striped table-hover table-sm">
             <thead>
                 <tr>
                     <th scope="col">OBRA ALTERADA</th>
+                    <th scope="col">CÓDIGO</th>
+                    <th scope="col">AÇÃO FEITA</th>
+                    <th scope="col">CAMPO ALTERADO</th>
                     <th scope="col">STATUS ANTERIOR</th>
                     <th scope="col">STATUS ATUAL</th>
                     <th scope="col">DATA/HORA DA EDIÇÃO</th>
@@ -27,9 +30,12 @@
             <tbody>
                 {% for item in itemstatuschange_list %}
                     <tr>
-                        <td scope="row"> {{ item.item }} </td>
-                        <td> {{ item.previous_status }} </td>
-                        <td> {{ item.new_status }} </td>
+                        <td scope="row"> {{ item.item.id_work }} </td>
+                        <td> {{ item.item.id_code }} </td>
+                        <td> {{ item.action_display }} </td>
+                        <td> {{ item.field_changed_display }} </td>
+                        <td> {% if item.field_changed == "availability" %}{{ item.availability_display }}{% else %}{{ item.preservation_display }}{% endif %} </td>
+                        <td> {% if item.field_changed == "availability" %}{{ item.availability_display }}{% else %}{{ item.preservation_display }}{% endif %} </td>
                         <td> {{ item.changed_at }} </td>
                         <td> {{ item.changed_by }} </td>
                     </tr>

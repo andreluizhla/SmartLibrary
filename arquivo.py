@@ -296,3 +296,159 @@
 # django-admin startapp [Nome do APP]
 # ou
 # python -m django startapp [Nome do APP]
+
+
+
+
+
+
+
+
+
+# Código possívelmente útil:
+# collection_item/models.py
+
+# CollectionItem:
+# [...]
+# def save(self, *args, **kwargs):
+#     if self.pk is not None:
+#         try:
+#             original = CollectionItem.objects.get(pk=self.pk)
+#             if original.availability != self.availability:
+#                 changed_by = getattr(self, "responsavel_form_input", "Sistema")
+#                 # ItemStatusChange.objects.create(
+#                 #     item=self,
+#                 #     action=ItemStatusChange.ACTION_UPDATE,
+#                 #     field_changed="availability",
+#                 #     previous_value=str(original.availability),
+#                 #     new_value=str(self.availability),
+#                 #     changed_by=changed_by,
+#                 # )
+#         except CollectionItem.DoesNotExist:
+#             pass
+#     super().save(*args, **kwargs)
+
+
+
+# class ItemStatusChange(models.Model):
+#     ACTION_UPDATE = "update"
+#     ACTION_DELETE = "delete"
+#     ACTION_CHOICES = [
+#         (ACTION_UPDATE, "Atualização"),
+#         (ACTION_DELETE, "Exclusão"),
+#     ]
+
+#     item_title = models.CharField(
+#         verbose_name="Título Item Acervo",
+#         null=False,
+#         blank=False,
+#     )
+#     item_code = models.CharField(
+#         verbose_name="Código do Item",
+#         max_length=10,
+#         null=False,
+#         blank=False,
+#     )
+#     action = models.CharField(
+#         max_length=10,
+#         choices=ACTION_CHOICES,
+#         verbose_name="Ação",
+#         default=None,
+#         null=True,
+#     )
+#     field_changed = models.CharField(
+#         max_length=50, verbose_name="Campo Alterado", blank=True, null=True
+#     )
+#     previous_value = models.CharField(
+#         max_length=255, verbose_name="Valor Anterior", blank=True, null=True
+#     )
+#     new_value = models.CharField(
+#         max_length=255, verbose_name="Novo Valor", blank=True, null=True
+#     )
+#     changed_at = models.DateTimeField(verbose_name="Data da Alteração", default=now)
+#     changed_by = models.CharField(
+#         max_length=150,
+#         verbose_name="Responsável pela Alteração",
+#         blank=False,
+#         null=False,
+#     )
+
+#     def action_display(self):
+#         return dict(self.ACTION_CHOICES).get(self.action, "Desconhecido")
+
+#     def field_changed_display(self):
+#         if self.field_changed == "availability":
+#             return "Disponibilidade"
+#         elif self.field_changed == "preservation":
+#             return "Estado de Conservação"
+#         else:
+#             return self.field_changed or "Desconhecido"
+
+#     def availability_display(self):
+#         if self.item:
+#             return self.item.ESTADO_DISPONIVEL.get(
+#                 self.item.availability, "Desconhecido"
+#             )
+#         return "Desconhecido"
+
+#     def preservation_display(self):
+#         if self.item:
+#             return self.item.ESTADO_CONSEVACAO.get(
+#                 self.item.preservation, "Desconhecido"
+#             )
+#         return "Desconhecido"
+
+#     class Meta:
+#         ordering = ["-changed_at"]
+#         verbose_name = "Log de Alteração de Item"
+#         verbose_name_plural = "Logs de Alteração de Item"
+
+#     def __str__(self):
+#         return f"{self.item} - {self.action} por {self.changed_by} em {self.changed_at}"
+
+
+
+
+
+
+# collection_item/forms.py
+
+def save(self, commit=True):
+    # is_update = self.instance.pk is not None
+    # previous_availability = None
+    # previous_preservation = None
+    # if is_update:
+    #     old_item = CollectionItem.objects.get(pk=self.instance.pk)
+    #     previous_availability = old_item.availability
+    #     previous_preservation = old_item.preservation
+
+    instance = super().save(commit=commit)
+
+    # if is_update:
+    #     # Registra alteração de disponibilidade
+    #     if previous_availability != instance.availability:
+    #         ItemStatusChange.objects.create(
+    #             item=instance,
+    #             action="update",
+    #             field_changed="availability",
+    #             previous_value=previous_availability,
+    #             new_value=instance.availability,
+    #             changed_at=timezone.now(),
+    #             changed_by=self.user,
+    #         )
+    #         return instance
+    #     # Registra alteração de preservação
+
+    #     if previous_preservation != instance.preservation:
+    #         ItemStatusChange.objects.create(
+    #             item=instance,
+    #             action="update",
+    #             field_changed="preservation",
+    #             previous_value=previous_preservation,
+    #             new_value=instance.preservation,
+    #             changed_at=timezone.now(),
+    #             changed_by=self.user,
+    #         )
+    #         return instance
+
+    return instance

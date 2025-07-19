@@ -55,7 +55,7 @@ class UserAccountView(LoginRequiredMixin, DetailView):
 
 
 # CRUD do User:
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(LibrarianPermissionMixin, ListView):
     login_url = reverse_lazy("user_login")
     model = User
 
