@@ -3,7 +3,7 @@
 import django.contrib.auth.models
 import django.core.validators
 import django.utils.timezone
-import user.validar_info
+import validadores.validar_info
 from django.db import migrations, models
 
 
@@ -30,10 +30,10 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('type_user', models.PositiveSmallIntegerField(choices=[(0, 'Leitor'), (1, 'Funcionário'), (2, 'Bibliotecário')], default=0, verbose_name='Tipo de Usuário')),
-                ('username', models.CharField(help_text='Esse nome ficará no banco de dados da Secretaria de Educação do Paraná', max_length=150, unique=True, validators=[user.validar_info.validate_name], verbose_name='Nome Completo')),
-                ('cpf', models.CharField(help_text='Não use pontos nem traços', max_length=11, unique=True, validators=[django.core.validators.MinLengthValidator(11), user.validar_info.validate_cpf], verbose_name='CPF')),
-                ('phone', models.CharField(help_text='Digite apenas números, sem pontuações ou espaços.', max_length=11, validators=[django.core.validators.MinLengthValidator(10), user.validar_info.validate_phone], verbose_name='Telefone')),
-                ('cgm', models.CharField(blank=True, help_text='Código Geral de Matrícula (10 dígitos)', max_length=10, null=True, unique=True, validators=[user.validar_info.validate_cgm], verbose_name='CGM')),
+                ('username', models.CharField(help_text='Esse nome ficará no banco de dados da Secretaria de Educação do Paraná', max_length=150, unique=True, validators=[validadores.validar_info.validate_name], verbose_name='Nome Completo')),
+                ('cpf', models.CharField(help_text='Não use pontos nem traços', max_length=11, unique=True, validators=[django.core.validators.MinLengthValidator(11), validadores.validar_info.validate_cpf], verbose_name='CPF')),
+                ('phone', models.CharField(help_text='Digite apenas números, sem pontuações ou espaços.', max_length=11, validators=[django.core.validators.MinLengthValidator(10), validadores.validar_info.validate_phone], verbose_name='Telefone')),
+                ('cgm', models.CharField(blank=True, help_text='Código Geral de Matrícula (10 dígitos)', max_length=10, null=True, unique=True, validators=[validadores.validar_info.validate_cgm], verbose_name='CGM')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
             ],

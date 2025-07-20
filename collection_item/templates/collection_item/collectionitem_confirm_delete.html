@@ -13,7 +13,13 @@
 {% block main_content %}
     <h1>Excluir Item Acervo</h1>
     {% comment %} {% if item.availability == "Disponível" %} {% endcomment %}
-        <p>Você tem certeza que quer excluir o livro <strong>{{ collectionitem.id_work }} (Código: {{ collectionitem.id_code }})</strong>?</p>
+        <p>Você tem certeza que quer excluir o {{collectionitem.get_type_display}} <strong>
+            {% if collectionitem.book %}
+            {{ collectionitem.book.title }} (Código: {{ collectionitem.book.isbn_display }})
+            {% else %}
+            {{ collectionitem.equipment.brand }} (Número de Série: {{ collectionitem.equipment.serial_number }})
+            {% endif %}
+        </strong>?</p>
         <p>ATENÇÃO: ESSA AÇÃO NÃO TERÁ VOLTA!</p>
         <form method="POST">
             {% csrf_token %}

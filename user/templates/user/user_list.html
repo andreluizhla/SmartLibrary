@@ -9,7 +9,7 @@
 {% endblock breadcrumbs %}
 
 {% block main_content %}
-    <h1>Usuários Cadastrados</h1>
+    <h1>Usuários Cadastrados {% if user.type_user == 2 %}<a href="{% url 'user_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Usuário" ><i class="bi bi-person-plus-fill"></i></a>{% endif %}</h1>
     {% if user_list %}
     <div class="table-responsive">
         <table class="table table-striped table-hover table-sm">
@@ -17,7 +17,7 @@
                 <tr>
                     <th scope="col">TIPO</th>
                     <th scope="col">NOME</th>
-                    <th scope="col">STATUS</th>
+                    {% comment %} <th scope="col">STATUS</th> {% endcomment %}
                     <th scope="col">CPF</th>
                     <th scope="col">CGM</th>
                     <th scope="col">E-MAIL</th>
@@ -32,11 +32,11 @@
                     <tr>
                         <td>{{ usuario.get_tipo_usuario_display }}</td>
                         <td>{{ usuario.username|truncatechars:50 }}</td>
-                        <td>
+                        {% comment %} <td>
                             <span class="badge bg-{% if usuario.status == 0 %}success{% elif usuario.status == 1 %}danger{% else %}warning{% endif %}">
                                 {{ usuario.get_status_display }}
                             </span>
-                        </td>
+                        </td> {% endcomment %}
                         <td>{{ usuario.cpf_formatted }}</td>
                         <td>{{ usuario.cgm }}</td>
                         <td>{{ usuario.email|truncatechars:20 }}</td>
@@ -64,7 +64,4 @@
     {% else %}
         <p>Parece que não tem nada...</p>
     {% endif %}
-    <div>
-        {% if user.type_user == 2 %}<a href="{% url 'user_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Usuários" ><i class="bi bi-person-plus-fill"></i></a>{% endif %}
-    </div>
 {% endblock main_content %}

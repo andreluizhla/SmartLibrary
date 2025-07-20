@@ -70,7 +70,6 @@ class UserUpdateForm(UserChangeForm):
             "cpf",
             "phone",
             "cgm",
-            "status",
         ]
         widgets = {
             "status": forms.Select(choices=User.STATUS_CHOICES),

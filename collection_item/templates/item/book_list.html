@@ -6,12 +6,12 @@
 <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
     <li class="breadcrumb-item"><a href="{% url "collection_item_list" %}">Itens Acervo</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Equipamentos</li>
+    <li class="breadcrumb-item active" aria-current="page">Livros</li>
 </ol>
 {% endblock breadcrumbs %}
 
 {% block main_content %}
-<h1>Lista de Livros</h1>
+<h1>Livros Cadastrados {% if user.type_user == 2 %} <a href="{% url "collection_item_create" %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Livro"><i class="bi bi-plus-circle"></i></a>{% endif %}</h1>
 {% if book_list %}
 <div class="table-responsive">
     <table class="table table-striped table-hover table-sm">
@@ -28,13 +28,16 @@
             <tbody>
                 {% for book in book_list %}
                     <tr>
-                        <td>{{book.isbn}}</td>
+                        <td>{{book.isbn_display}}</td>
                         <td>{{book.title}}</td>
                         <td>{{book.author}}</td>
                         <td>{{book.publisher}}</td>
                         <td>{{book.year_pub}}</td>
                         <td>
                             <a href="{% url "collection_item_update" book.id %}" class="btn btn-sm btn-primary" title="Editar" data-bs-toggle="tooltip" data-bs-title="Editar Livro"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url "collection_item_delete" book.id %}"class="btn btn-sm btn-danger" title="Excluir" data-bs-toggle="tooltip" data-bs-title="Excluir Usuário" >
+                                    <i class="bi bi-trash"></i>
+                                </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -44,5 +47,4 @@
 {% else %}
 <p>Parece que não tem nenhum livro cadastrado...</p>
 {% endif %}
-
 {% endblock main_content %}

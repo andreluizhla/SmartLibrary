@@ -90,6 +90,18 @@ def validate_phone(value):
         raise ValidationError("Celulares devem começar com 9 (ex: 9XXXX-XXXX)")
 
 
+def validate_isbn(value):
+    isbn = value
+
+    if len(isbn) not in [10, 13]:
+        raise ValidationError(
+            "O código tem que conter 10 números (versão antiga) ou 13 números (nova versão)"
+        )
+
+    if not re.fullmatch(r"\d+", isbn):
+        raise ValidationError("O ISBN não pode conter espaços, letras ou símbolos")
+
+
 ddd_list = [
     11,
     12,

@@ -1,0 +1,109 @@
+<div class="dropdown mb-2" id="id-dropdown">
+    <button class="btn btn-primary btn-sm dropdown-toggle" id="id-dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false">Equipamento Digital</button>
+    <ul class="dropdown-menu">
+        <li>
+            <button class="p-2 dropdown-item" id="id-li-equipment" type="button" onclick="changeTextDropdown('equipment')">Equipamento Digital</button>
+        </li>
+        <li>
+            <button class="p-2 dropdown-item" id="id-li-book" type="button" onclick="changeTextDropdown('book')">Livro</button>
+        </li>
+    </ul>
+</div>
+    <div id="id-div-hint">
+        <p class="fs-4">Escolha que tipo de Acervo que deseja ver (Equipamento Digital ou Livros)</p>
+    </div>
+    <div class="table-responsive" id="id-equipment-table">
+        <table class="table table-striped table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>NÚMERO DE SÉRIE</th>
+                    <th>TIPO</th>
+                    <th>MODELO/MARCA</th>
+                    <th>ESPECIFICAÇÃO</th>
+                    <th>AÇÕES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for equipment in equipment_list %}
+                {% if equipment.type == 1%}
+                <tr>
+                    <td>{{ equipment.serial_number|truncatechars:10 }}</td>
+                    <td>{{ equipment.get_type_display }}</td>
+                    <td>{{ equipment.brand|truncatechars:20 }}</td>
+                    <td>{{ equipment.specifications|truncatechars:75 }}</td>
+                    <td>
+                        <div class="btn-group">
+                        {% comment %} <a href="{% url 'collection_item_detail' equipment.id %}" class="btn btn-info">Detalhes</a> {% endcomment %}
+                        <a href="{% url 'collection_item_update' equipment.id %}" class="btn btn-sm btn-primary" title="Editar" data-bs-toggle="tooltip" data-bs-title="Editar Equipamento">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url "collection_item_delete" equipment.id %}"class="btn btn-sm btn-danger" title="Excluir" data-bs-toggle="tooltip" data-bs-title="Excluir Equipamento" >
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="table-responsive" id="id-book-table">
+        <table class="table table-striped table-hover table-sm">
+        <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>TÍTULO</th>
+                    <th>AUTOR</th>
+                    <th>EDITORA</th>
+                    <th>ANO DE PUBLICAÇÃO</th>
+                    <th>AÇÃO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in book_list %}
+                    <tr>
+                        <td>{{book.isbn_display}}</td>
+                        <td>{{book.title}}</td>
+                        <td>{{book.author}}</td>
+                        <td>{{book.publisher}}</td>
+                        <td>{{book.year_pub}}</td>
+                        <td>
+                            <a href="{% url "collection_item_update" book.id %}" class="btn btn-sm btn-primary" title="Editar" data-bs-toggle="tooltip" data-bs-title="Editar Livro"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url "collection_item_delete" book.id %}"class="btn btn-sm btn-danger" title="Excluir" data-bs-toggle="tooltip" data-bs-title="Excluir Usuário" >
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const btnDropdown = document.getElementById("id-dropdown-btn")
+        const liBook = document.getElementById("id-li-book")
+        const liEquipment = document.getElementById("id-li-equipment")
+        const tableBook = document.getElementById("id-book-table")
+        const tableEquipment = document.getElementById("id-equipment-table")
+        const divHint = document.getElementById("id-div-hint")
+        tableBook.style.display = "none"
+        tableEquipment.style.display = "none"
+        
+        function changeTextDropdown(text) {
+            divHint.style.display = "none"
+            liBook.classList.remove("disable")
+            liEquipment.classList.remove("disable")
+            tableBook.style.display = "none"
+            tableEquipment.style.display = "none"
+            if (text == "equipment"){
+                btnDropdown.innerText = "Equipamento Digital"
+                liEquipment.classList.add("disable")
+                tableEquipment.style.display = "block"
+            } else if (text == "book") {
+                btnDropdown.innerText = "Livro"
+                liBook.classList.add("disable")
+                tableBook.style.display = "block"
+            }
+        }
+    </script>

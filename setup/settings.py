@@ -50,7 +50,7 @@ THIRD_PARTY_APPS = [
 MY_APPS = [
     "collection_item.apps.CollectionItemConfig",
     "user.apps.UserConfig",
-    "collection.apps.CollectionConfig",
+    # "collection.apps.CollectionConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS

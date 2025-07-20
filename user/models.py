@@ -5,13 +5,13 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import MinLengthValidator
 from django.core.exceptions import ValidationError
-from .validar_info import (
+
+from validadores.validar_info import (
     validate_name,
     validate_cpf,
     validate_cgm,
     validate_phone,
 )
-
 
 class User(AbstractUser):
     LEITOR = 0
@@ -83,7 +83,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"
-        
+
         ordering = ["type_user", "username"]
 
     def __str__(self):
@@ -105,9 +105,9 @@ class User(AbstractUser):
     def phone_formatted(self):
         phone = self.phone
         if len(phone) == 11:
-            return f'({phone[:2]}) {phone[2:7]}-{phone[7:]}'
-        return f'({phone[:2]}) {phone[2:6]}-{phone[6:]}'
-    
+            return f"({phone[:2]}) {phone[2:7]}-{phone[7:]}"
+        return f"({phone[:2]}) {phone[2:6]}-{phone[6:]}"
+
     def cpf_formatted(self):
         cpf = self.cpf
         return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if cpf else ""

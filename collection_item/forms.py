@@ -1,5 +1,5 @@
 from django import forms
-from user.validar_info import validate_name
+from validadores.validar_info import validate_name
 from django.utils import timezone
 from .models import CollectionItem, Book, Equipment
 
@@ -31,7 +31,8 @@ class CollectionItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance.pk:
-            self.fields["id_code"].disabled = True
+            pass
+            # self.fields[""].disabled = True
         elif self.user:
             nome_usuario = (
                 self.user.get_full_name() or self.user.username

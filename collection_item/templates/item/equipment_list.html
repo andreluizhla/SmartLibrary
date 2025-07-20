@@ -13,37 +13,38 @@ Lista de Equipamentos
 {% endblock breadcrumbs %}
 
 {% block main_content %}
-<h1>Lista de Equipamentos</h1>    
+<h1>Equipamentos Digitais {% if user.type_user == 2 %} <a href="{% url "collection_item_create" %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Equipamento"><i class="bi bi-plus-circle"></i></a>{% endif %}</h1>    
 <div class="table-responsive">
     <table class="table table-striped table-hover table-sm">
         <thead>
             <tr>
                 <th>NÚMERO DE SÉRIE</th>
+                <th>TIPO</th>
                 <th>MODELO/MARCA</th>
-                <th>Descrição</th>
-                <th>Ações</th>
+                <th>ESPECIFICAÇÃO</th>
+                <th>AÇÕES</th>
             </tr>
         </thead>
         <tbody>
             {% for equipment in equipment_list %}
             <tr>
-                <td>{{ equipment.serial_number }}</td>
-                <td>{{ equipment.brand }}</td>
+                <td>{{ equipment.serial_number|truncatechars:10 }}</td>
+                <td>{{ equipment.get_type_display }}</td>
+                <td>{{ equipment.brand|truncatechars:20 }}</td>
                 <td>{{ equipment.specifications|truncatechars:75 }}</td>
                 <td>
+
                     <div class="btn-group">
 
-                    {% comment %} <a href="{% url 'equipment_detail' equipment.id %}" class="btn btn-info">Detalhes</a> {% endcomment %}
+                    {% comment %} <a href="{% url 'collection_item_detail' equipment.id %}" class="btn btn-info">Detalhes</a> {% endcomment %}
                     <a href="{% url 'collection_item_update' equipment.id %}" class="btn btn-sm btn-primary" title="Editar" data-bs-toggle="tooltip" data-bs-title="Editar Equipamento">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    {% comment %} 
-                    <a href="{% url 'equipment_delete' equipment.id %}" class="btn btn-danger">Excluir</a> {% endcomment %}
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url "collection_item_delete" equipment.id %}"class="btn btn-sm btn-danger" title="Excluir" data-bs-toggle="tooltip" data-bs-title="Excluir Equipamento" >
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
                 </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">Nenhum equipamento encontrado.</td>
             </tr>
             {% endfor %}
         </tbody>

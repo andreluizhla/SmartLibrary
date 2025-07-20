@@ -17,6 +17,9 @@
     <h1>{% if collectionitem.pk %}Editar{% else %}Cadastrar{% endif %} Item de Acervo</h1>
     <form method="POST">
         {% csrf_token %}
+    {% if form %}
+        {{form|crispy}}
+    {% else %}
         {{ item_form|crispy }}
         <div id="id_book_form">
             {{ book_form|crispy }}
@@ -24,6 +27,7 @@
         <div id="id_equipment_form" style="display: none;">
             {{ equipment_form|crispy }}
         </div>
+    {% endif %}
         <button type="submit" class="btn btn-primary button-jump" data-bs-toggle="tooltip" data-bs-title="Salvar Item"><i class="bi bi-floppy"></i></button>
         <a href="{% url 'collection_item_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-arrow-left-circle"></i></a>
         {% if collectionitem.pk %}

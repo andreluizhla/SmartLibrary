@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from .validators import id_code_validator
+from validadores.validar_info import validate_isbn
 
 User = get_user_model()
 # from collection.models import Collection
@@ -68,9 +68,7 @@ class CollectionItem(models.Model):
     class Meta:
         verbose_name = "Item do Acervo"
         verbose_name_plural = "Itens do Acervo"
-
-    def __str__(self):
-        return f"{self.title} ({self.id_code})"
+        ordering = ["type"]
 
     def preservation_display(self):
         return self.ESTADO_CONSEVACAO.get(self.preservation, "Desconhecido")
@@ -78,15 +76,20 @@ class CollectionItem(models.Model):
     def availability_display(self):
         return self.ESTADO_DISPONIVEL.get(self.availability, "Desconhecido")
 
-    def type_display(self):
-        return dict(self.COLLECTION_TYPES).get(self.collection_type, "Desconhecido")
+    def get_type_display(self):
+        return dict(self.COLLECTION_TYPES).get(self.type, "Desconhecido")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
 
 class Book(CollectionItem):
-    isbn = models.CharField(verbose_name="ISBN", max_length=13, primary_key=True, help_text="Digite apenas números")
+    isbn = models.CharField(
+        verbose_name="ISBN",
+        max_length=13,
+        help_text="Digite apenas números",
+        validators=[validate_isbn],
+    )
     title = models.CharField(verbose_name="Título da Obra", max_length=100)
     author = models.CharField(verbose_name="Autor da Obra", max_length=50)
     publisher = models.CharField(verbose_name="Editora da Obra", max_length=50)
@@ -100,11 +103,33 @@ class Book(CollectionItem):
     def __str__(self):
         return self.title
 
+    def isbn_display(self):
+        if self.isbn == 10:
+            return (
+                self.isbn[:1]
+                + "-"
+                + self.isbn[2:4]
+                + "-"
+                + self.isbn[5:8]
+                + "-"
+                + self.isbn[9:]
+            )
+        else:
+            return (
+                self.isbn[:3]
+                + "-"
+                + self.isbn[3:5]
+                + "-"
+                + self.isbn[5:10]
+                + "-"
+                + self.isbn[10:12]
+                + "-"
+                + self.isbn[12:]
+            )
+
 
 class Equipment(CollectionItem):
-    serial_number = models.CharField(
-        verbose_name="Número de Série", max_length=20, primary_key=True
-    )
+    serial_number = models.CharField(verbose_name="Número de Série", max_length=20)
     brand = models.CharField(verbose_name="Marca/Modelo", max_length=100)
     specifications = models.TextField(verbose_name="Especificações")
 

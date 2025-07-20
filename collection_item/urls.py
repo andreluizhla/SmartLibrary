@@ -2,7 +2,6 @@ from django.urls import path
 from .views import (
     # CollectionItem
     CollectionItemCreateView,
-    # collection_item_create_view,
     CollectionItemDeleteView,
     CollectionItemListView,
     CollectionItemUpdateView,
@@ -22,22 +21,14 @@ urlpatterns = [
     path(
         "",
         CollectionItemListView.as_view(),
+        {"type": 0},
         name="collection_item_list",
     ),
+    # path("<int:type>/", CollectionItemListView.as_view(), name="collection_item_list"),
     path(
         "create",
         CollectionItemCreateView.as_view(),
         name="collection_item_create",
-    ),
-    path(
-        "book",
-        BookListView.as_view(),
-        name="book_list",
-    ),
-    path(
-        "equipment",
-        EquipmentListView.as_view(),
-        name="equipment_list",
     ),
     path(
         "update/<str:pk>",
@@ -49,27 +40,17 @@ urlpatterns = [
         CollectionItemDeleteView.as_view(),
         name="collection_item_delete",
     ),
-    # # URLS do Work
-    # path(
-    #     "work",
-    #     CollectionItemListView.as_view(),
-    #     name="work_list",
-    # ),
-    # path(
-    #     "work/create",
-    #     CollectionItemCreateView.as_view(),
-    #     name="work_create",
-    # ),
-    # path(
-    #     "work/update/<int:pk>",
-    #     CollectionItemUpdateView.as_view(),
-    #     name="work_update",
-    # ),
-    # path(
-    #     "work/delete/<int:pk>",
-    #     CollectionItemDeleteView.as_view(),
-    #     name="work_delete",
-    # ),
+    # URL Collection Item
+    path(
+        "book",
+        BookListView.as_view(),
+        name="book_list",
+    ),
+    path(
+        "equipment",
+        EquipmentListView.as_view(),
+        name="equipment_list",
+    ),
     # URLS do ItemHistory
     # path(
     #     "history",

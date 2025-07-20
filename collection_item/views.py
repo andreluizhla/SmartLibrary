@@ -12,8 +12,23 @@ from user.views import LibrarianPermissionMixin
 
 # CRUD CollectionList
 class CollectionItemListView(ListView):
-    model = CollectionItem
-    template_name = "collection_item/collection_item/collectionitem_list.html"
+    template_name = "collection_item/collectionitem_list.html"
+    context_object_name = "items_list"
+
+    def get_queryset(self):
+        self.selected_type = int(self.request.GET.get('type', 0))
+        
+        if self.selected_type == CollectionItem.LIVRO:
+            return Book.objects.all()
+        else:
+            return Equipment.objects.filter(type=self.selected_type)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context["collection_types"] = CollectionItem.COLLECTION_TYPES
+        context["selected_type"] = self.selected_type
+        return context
 
 
 # class CollectionItemCreateView(LibrarianPermissionMixin, CreateView):
@@ -24,8 +39,8 @@ class CollectionItemListView(ListView):
 
 
 class BookListView(LoginRequiredMixin, ListView):
-    model = Book
-    template_name = "collection_item/book_list.html"
+    model = [Book, CollectionItem]
+    template_name = "item/book_list.html"
 
     def get_queryset(self):
         return Book.objects.all()
@@ -33,14 +48,11 @@ class BookListView(LoginRequiredMixin, ListView):
 
 class EquipmentListView(LoginRequiredMixin, ListView):
     model = Equipment
-    template_name = "collection_item/equipment_list.html"
-
-    def get_queryset(self):
-        return Equipment.objects.all()
+    template_name = "item/equipment_list.html"
 
 
 class CollectionItemCreateView(LibrarianPermissionMixin, View):
-    template_name = "collection_item/collection_item/collectionitem_form.html"
+    template_name = "collection_item/collectionitem_form.html"
     success_url = reverse_lazy("collection_item_list")
 
     def get(self, request, *args, **kwargs):
@@ -54,6 +66,7 @@ class CollectionItemCreateView(LibrarianPermissionMixin, View):
     def post(self, request, *args, **kwargs):
         item_form = CollectionItemForm(request.POST, user=request.user)
         tipo = int(request.POST.get("type", -1))
+        print(tipo)
 
         if tipo == CollectionItem.LIVRO:
             child_form = BookForm(request.POST)
@@ -68,10 +81,13 @@ class CollectionItemCreateView(LibrarianPermissionMixin, View):
 
         if item_form.is_valid() and child_form.is_valid():
             item = item_form.save(commit=False)
+            tipo = int(request.POST.get("type", 0))
+            item.type = tipo
             item.save()
 
             child = child_form.save(commit=False)
             child.pk = item.pk
+            child.type = tipo
             child.save()
 
             messages.success(request, "Item de Acervo cadastrado com sucesso!")
@@ -95,14 +111,31 @@ class CollectionItemCreateView(LibrarianPermissionMixin, View):
             }
             return render(request, self.template_name, context)
 
-    # def form_valid(self, form):
-    #     response = super().form_valid(form)
-    #     return response
+
+class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
+    model = CollectionItem
+    form_class = CollectionItemForm
+    template_name = "collection_item/collectionitem_form.html"
+    success_url = reverse_lazy("collection_item_list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user  # necessário para o __init__ do form
+        return kwargs
+
+    def form_valid(self, form):
+        # Atualiza o responsável com base no usuário logado
+        nome_usuario = self.request.user.get_full_name() or self.request.user.username
+        form.instance.responsible_person = nome_usuario
+
+        response = super().form_valid(form)
+        messages.success(self.request, "Item de Acervo atualizado com sucesso!")
+        return response
 
 
 class CollectionItemDeleteView(LibrarianPermissionMixin, DeleteView):
     model = CollectionItem
-    template_name = "collection_item/collection_item/collectionitem_confirm_delete.html"
+    template_name = "collection_item/collectionitem_confirm_delete.html"
     success_url = reverse_lazy("collection_item_list")
 
     def dispatch(self, request, *args, **kwargs):
@@ -120,69 +153,6 @@ class CollectionItemDeleteView(LibrarianPermissionMixin, DeleteView):
         return response
 
 
-class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
-    model = CollectionItem
-    form_class = CollectionItemForm
-    template_name = "collection_item/collectionitem_form.html"
-    success_url = reverse_lazy("collection_item_list")
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.instance.usuario = self.request.user  # Associa o usuário à instância
-        return super().form_valid(form)
-
-    def form_valid(self, form):
-        form.instance.responsavel_form_input = (
-            self.request.user.username or self.request.user.get_full_name()
-        )
-        response = super().form_valid(form)
-        messages.success(self.request, "Item de Acervo atualizado com sucesso!")
-        # se responsável existe, coloca ele, senão, coloca Sistema
-        responsavel = form.cleaned_data.get("responsavel", "Sistema")
-        form.instance.responsavel_form_input = responsavel
-        return response
-
-
-# CRUD do Work:
-# class WorkListView(LoginRequiredMixin, ListView):
-#     model = Work
-#     template_name = "collection_item/work_list.html"
-
-# class WorkCreateView(LibrarianPermissionMixin, CreateView):
-#     model = Work
-#     fields = "__all__"
-#     template_name = "collection_item/work_form.html"
-#     success_url = reverse_lazy("work_list")
-
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Obra cadastrada com sucesso!")
-#         return response
-
-# class WorkUpdateView(LibrarianPermissionMixin, UpdateView):
-#     model = Work
-#     fields = "__all__"
-#     template_name = "collection_item/work_form.html"
-#     success_url = reverse_lazy("work_list")
-
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Obra atualizada com sucesso!")
-#         return response
-
-# class WorkDeleteView(LibrarianPermissionMixin, DeleteView):
-#     model = Work
-#     success_url = reverse_lazy("work_list")
-
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Obra excluída com sucesso!")
-#         return response
-
 # # ItemHistory View
 # class ItemHistoryView(LibrarianPermissionMixin, ListView):
 #     model = ItemStatusChange
@@ -192,13 +162,13 @@ class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
 # CRUD do DelayPolicy:
 class DelayPolicyListView(LibrarianPermissionMixin, ListView):
     model = DelayPolicy
-    template_name = "collection_item/delay_policy/delaypolicy_list.html"
+    template_name = "delay_policy/delaypolicy_list.html"
 
 
 class DelayPolicyCreateView(LibrarianPermissionMixin, CreateView):
     model = DelayPolicy
     fields = "__all__"
-    template_name = "collection_item/delay_policy/delaypolicy_form.html"
+    template_name = "delay_policy/delaypolicy_form.html"
     success_url = reverse_lazy("delay_policy_list")
 
     def form_valid(self, form):
@@ -210,7 +180,7 @@ class DelayPolicyCreateView(LibrarianPermissionMixin, CreateView):
 class DelayPolicyUpdateView(LibrarianPermissionMixin, UpdateView):
     model = DelayPolicy
     fields = "__all__"
-    template_name = "collection_item/delay_policy/delaypolicy_form.html"
+    template_name = "delay_policy/delaypolicy_form.html"
     success_url = reverse_lazy("delay_policy_list")
 
     def form_valid(self, form):
@@ -221,7 +191,7 @@ class DelayPolicyUpdateView(LibrarianPermissionMixin, UpdateView):
 
 class DelayPolicyDeleteView(LibrarianPermissionMixin, DeleteView):
     model = DelayPolicy
-    template_name = "collection_item/delay_policy/delaypolicy_confirm_delete.html"
+    template_name = "delay_policy/delaypolicy_confirm_delete.html"
     success_url = reverse_lazy("delay_policy_list")
 
     def form_valid(self, form):
