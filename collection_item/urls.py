@@ -5,8 +5,8 @@ from .views import (
     CollectionItemDeleteView,
     CollectionItemListView,
     CollectionItemUpdateView,
-    BookListView,
-    EquipmentListView,
+    # BookUpdateView,
+    # EquipmentUpdateView,
     # ItemHistory
     # ItemHistoryView,
     # DelayPolicy
@@ -35,22 +35,24 @@ urlpatterns = [
         CollectionItemUpdateView.as_view(),
         name="collection_item_update",
     ),
+    # path("update/<str:pk>", BookUpdateView.as_view(), name="book_update"),
+    # path("update/<str:pk>", EquipmentUpdateView.as_view(), name="equipment_update"),
     path(
         "delete/<str:pk>",
         CollectionItemDeleteView.as_view(),
         name="collection_item_delete",
     ),
     # URL Collection Item
-    path(
-        "book",
-        BookListView.as_view(),
-        name="book_list",
-    ),
-    path(
-        "equipment",
-        EquipmentListView.as_view(),
-        name="equipment_list",
-    ),
+    # path(
+    #     "book",
+    #     BookListView.as_view(),
+    #     name="book_list",
+    # ),
+    # path(
+    #     "equipment",
+    #     EquipmentListView.as_view(),
+    #     name="equipment_list",
+    # ),
     # URLS do ItemHistory
     # path(
     #     "history",

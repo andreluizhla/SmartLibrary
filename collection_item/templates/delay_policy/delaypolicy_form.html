@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}Cadastro de Multa{% endblock title %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+    <li class="breadcrumb-item"><a href="{% url "delay_policy_list" %}">Política de Multa</a></li>
+    <li class="breadcrumb-item active">{% if delaypolicy.pk %}Editar{% else %}Cadastrar{% endif %}</li>
+</ol>
+{% endblock breadcrumbs %}
+
 {% block main_content %}
     <h1>{% if delaypolicy.pk %}Editar{% else %}Cadastrar{% endif %} Política de Multa</h1>
     <form method="POST">
@@ -9,7 +19,7 @@
         <button type="submit" class="btn btn-primary button-jump" data-bs-toggle="tooltip" data-bs-title="Salvar Política"><i class="bi bi-floppy"></i></button>
         <a href="{% url 'delay_policy_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-arrow-left-circle"></i></a>
         {% if delaypolicy.pk %}
-        <a href="{% url 'collection_item_delete' delaypolicy.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        <a href="{% url 'delay_policy_delete' delaypolicy.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
         {% endif %}
     </form>
 {% endblock main_content %}

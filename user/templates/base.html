@@ -101,35 +101,15 @@
 
                 {% comment %} Links na barra de navegação {% endcomment %}
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav flex-fill align-items-center">
+                    <ul class="navbar-nav flex-fill">
                         {% if user.is_authenticated %}
+                                <li class="nav-item p-2"><a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_list" %}">Acervos</a></li>
                             {% if user.type_user == 2 %}
+                                <li class="nav-item p-2"><a class="nav-link active button-jump" aria-current="page" href="{% url "delay_policy_list" %}">Política de Multas</a></li>
                                 <li class="nav-item p-2">
                                     <a class="nav-link active button-jump" aria-current="page" href="{% url "user_list" %}">Usuários</a>
                                 </li>
                             {% endif %}
-                            <li class="nav-item dropdown">
-                                <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Biblioteca</p>
-                                <ul class="dropdown-menu">
-                                    {% comment %} <li class="dropdown-item p-2">
-                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
-                                    </li> {% endcomment %}
-                                    <li class="dropdown-item p-2">
-                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
-                                    </li>
-                                    {% comment %} <li class="dropdown-item p-2">
-                                        <a class="nav-link active button-jump" aria-current="page" href="{% url "work_list" %}">Obras</a>
-                                    </li> {% endcomment %}
-                                    {% if user.type_user == 2 %}
-                                        <li class="dropdown-item p-2">
-                                            <a class="nav-link active button-jump" aria-current="page" href="{% url "delay_policy_list" %}">Política de Multas</a>
-                                        </li>
-                                        {% comment %} <li class="nav-item p-2">
-                                            <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
-                                        </li> {% endcomment %}
-                                    {% endif %}
-                                </ul>
-                            </li>
                         {% endif %}
                     </ul>
 
@@ -195,3 +175,27 @@
     </script>
 </body>
 </html>
+
+{% comment %} Código Inútil {% endcomment %}
+
+{% comment %} <li class="nav-item dropdown d-flex align-items-center">
+    <p class="dropdown-toggle text-white m-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">Biblioteca</p>
+    <ul class="dropdown-menu">
+        {% comment %} <li class="dropdown-item p-2">
+            <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_list" %}">Acervo</a>
+        </li>                                     <li class="dropdown-item p-2">
+            <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_list" %}">Itens de Acervo</a>
+        </li>
+        {% comment %} <li class="dropdown-item p-2">
+            <a class="nav-link active button-jump" aria-current="page" href="{% url "work_list" %}">Obras</a>
+        </li>
+        {% if user.type_user == 2 %}
+            <li class="dropdown-item p-2">
+                <a class="nav-link active button-jump" aria-current="page" href="{% url "delay_policy_list" %}">Política de Multas</a>
+            </li>
+            {% comment %} <li class="nav-item p-2">
+                <a class="nav-link active button-jump" aria-current="page" href="{% url "collection_item_history" %}">Histórico de Edições</a>
+            </li> 
+        {% endif %}
+    </ul> 
+</li> {% endcomment %}

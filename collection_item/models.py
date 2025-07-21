@@ -2,9 +2,15 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from validadores.validar_info import validate_isbn
+from validadores.validar_info import (
+    validate_isbn,
+    validate_fine_value,
+    validate_upper_zero,
+)
 
-User = get_user_model()
+UserModel = get_user_model()
+from user.models import User
+
 # from collection.models import Collection
 
 
@@ -104,27 +110,20 @@ class Book(CollectionItem):
         return self.title
 
     def isbn_display(self):
-        if self.isbn == 10:
-            return (
-                self.isbn[:1]
-                + "-"
-                + self.isbn[2:4]
-                + "-"
-                + self.isbn[5:8]
-                + "-"
-                + self.isbn[9:]
-            )
+        isbn = self.isbn
+        if isbn != 13:
+            return isbn[:2] + "-" + isbn[2:5] + "-" + isbn[5:9] + "-" + isbn[9:]
         else:
             return (
-                self.isbn[:3]
+                isbn[:3]
                 + "-"
-                + self.isbn[3:5]
+                + isbn[3:5]
                 + "-"
-                + self.isbn[5:10]
+                + isbn[5:10]
                 + "-"
-                + self.isbn[10:12]
+                + isbn[10:12]
                 + "-"
-                + self.isbn[12:]
+                + isbn[12:]
             )
 
 
@@ -133,29 +132,79 @@ class Equipment(CollectionItem):
     brand = models.CharField(verbose_name="Marca/Modelo", max_length=100)
     specifications = models.TextField(verbose_name="Especificações")
 
+    class Meta:
+        verbose_name = "Equipamento Digital"
+        verbose_name_plural = "Equipamentos Digitais"
+        ordering = ["brand", "serial_number"]
+
 
 class DelayPolicy(models.Model):
-    type_user = models.SmallIntegerField(
+    TIPOS_USUARIOS = {
+        User.LEITOR: "Leitor",
+        User.FUNCIONARIO: "Funcionário",
+    }
+    type_user = models.PositiveSmallIntegerField(
         verbose_name="Tipo de Usuário",
-        choices=((0, "Leitor"), (1, "Funcionário")),
+        choices=TIPOS_USUARIOS,
+        default=User.LEITOR,
         null=False,
         blank=False,
     )
-    type_item = models.SmallIntegerField(
+    type_item = models.PositiveSmallIntegerField(
         verbose_name="Tipo de Item",
         choices=CollectionItem.COLLECTION_TYPES,
+        default=CollectionItem.LIVRO,
         null=False,
         blank=False,
     )
     max_days = models.PositiveIntegerField(
-        verbose_name="Prazo maximo de emprestimo", null=False, blank=False
+        verbose_name="Prazo maximo de emprestimo (em dias)",
+        null=False,
+        blank=False,
+        help_text="Tempo máximo (em dias) que o usuário poderá permanecer com o Item antes de começar a receber a multa.",
+        validators=[validate_upper_zero],
     )
-    fine_value = models.FloatField(
-        verbose_name="Valor da multa por dias de atraso", null=False, blank=False
-    )
-    delay_tolerance = models.PositiveIntegerField(
-        verbose_name="Tolerância de atraso", null=True, blank=True
+    fine_value = models.DecimalField(
+        verbose_name="Valor da multa (por dias)",
+        null=False,
+        blank=False,
+        max_digits=10,
+        decimal_places=2,
+        help_text="O valor da multa é calculado com base no número de dias em que o item não foi devolvido, multiplicado pelo valor diário da multa.",
+        validators=[validate_fine_value],
     )
     item_limits = models.PositiveIntegerField(
-        verbose_name="Limite de itens simultâneos", null=False, blank=False
+        verbose_name="Limite de itens simultâneos",
+        null=False,
+        blank=False,
+        help_text="Limite de Itens que o usuário pode emprestar",
+        validators=[validate_upper_zero],
     )
+    delay_tolerance = models.PositiveIntegerField(
+        verbose_name="Tolerância de atraso (Opcional)",
+        null=True,
+        blank=True,
+        help_text="Tempo máximo (em dias) que o usuário pode permanecer com o item sem ser multado.",
+    )
+
+    class Meta:
+        verbose_name = "Política de Multa e Atrazo"
+        verbose_name_plural = "Políticas de Multas e Atrazos"
+        ordering = ["type_user", "type_item"]
+
+    def clean(self):
+        super().clean()
+        if DelayPolicy.objects.filter(
+            type_user=self.type_user, type_item=self.type_item
+        ).exists():
+            raise ValidationError("Essa multa já existe!")
+
+    def fine_value_formatted(self):
+        return "R$ " + str(self.fine_value).replace(".", ",")
+
+    def delay_tolerance_formatted(self):
+        if self.delay_tolerance:
+            return str(self.delay_tolerance) + " dias"
+
+    # def max_days_display(value):
+    #     return value + " Dias"

@@ -14,12 +14,13 @@
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Informações do Perfil</h5>
-            <p><strong>Tipo:</strong> {{user.get_tipo_usuario_display}}</p>
+            <p><strong>Tipo:</strong> {{user.get_type_user_display}}</p>
             <p><strong>Status:</strong> {{user.get_status_display}}</p>
             <p><strong>CPF:</strong> {{user.cpf_formatted}}</p>
             <p><strong>Email:</strong> {{user.email}}</p>
             <p><strong>Telefone:</strong> {{user.phone_formatted}}</p>
             {% if user.cgm %}<p><strong>CGM:</strong> {{user.cgm}}</p>{% endif %}
+            {% if user.is_superuser %}<p><strong>O CARA É ADM!!!</strong></p>{% endif %}
         </div>
     </div>
     {% comment %} <p>Se quiser voltar para a página principal, <a href="{% url 'home_page' %}">Clique Aqui</a></p> {% endcomment %}

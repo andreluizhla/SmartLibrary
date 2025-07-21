@@ -4,6 +4,7 @@ from .views import (
     UserDeleteView,
     UserListView,
     UserUpdateView,
+    UserDetailView,
     UserLogin,
     UserAccountView,
     user_logout,
@@ -19,6 +20,7 @@ urlpatterns = [
         UserUpdateView.as_view(),
         name="user_update",
     ),
+    path("detail/<str:pk>", UserDetailView.as_view(), name="user_detail"),
     path(
         "password/",
         password,

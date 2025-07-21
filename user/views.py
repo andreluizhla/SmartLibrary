@@ -58,10 +58,17 @@ class UserAccountView(LoginRequiredMixin, DetailView):
 class UserListView(LibrarianPermissionMixin, ListView):
     login_url = reverse_lazy("user_login")
     model = User
+    # context_object_name = "selected_user_type"
+
+    def get_queryset(self):
+        self.selected_type = int(self.request.GET.get("user_type", 0))
+
+        return User.objects.filter(type_user=self.selected_type)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["tipos"] = {0: "Leitor", 1: "Funcionário", 2: "Bibliotecário"}
+        context["selected_type"] = self.selected_type
+        context["user_types_list"] = User.USERS_TYPES_LIST
         return context
 
 
@@ -111,6 +118,10 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
         response = super().form_valid(form)
         messages.success(self.request, "Usuário excluido com sucesso!")
         return response
+
+
+class UserDetailView(LoginRequiredMixin, DetailView):
+    model = User
 
 
 # Login User

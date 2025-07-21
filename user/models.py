@@ -13,6 +13,7 @@ from validadores.validar_info import (
     validate_phone,
 )
 
+
 class User(AbstractUser):
     LEITOR = 0
     FUNCIONARIO = 1
@@ -89,13 +90,6 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def get_tipo_usuario_display(self):
-        """Retorna o label correspondente ao número armazenado"""
-        for numero, label in self.USERS_TYPES_LIST:
-            if numero == self.type_user:
-                return label
-        return 0
-
     def clean_email(self):
         email = self.email.lower().strip()
         if User.objects.filter(email=email).exclude(pk=self.pk).exists():
@@ -111,6 +105,11 @@ class User(AbstractUser):
     def cpf_formatted(self):
         cpf = self.cpf
         return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if cpf else ""
+    
+    def cpf_formatted_encrypted(self):
+        cpf = self.cpf
+        esconde = "*" * 3
+        return f"{cpf[:3]}.{esconde}.{esconde}-{cpf[9:]}"
 
 
 class UserChangeLog(models.Model):

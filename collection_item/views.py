@@ -11,13 +11,14 @@ from user.views import LibrarianPermissionMixin
 
 
 # CRUD CollectionList
-class CollectionItemListView(ListView):
+class CollectionItemListView(LoginRequiredMixin, ListView):
     template_name = "collection_item/collectionitem_list.html"
     context_object_name = "items_list"
+    # paginate_by=2
 
     def get_queryset(self):
-        self.selected_type = int(self.request.GET.get('type', 0))
-        
+        self.selected_type = int(self.request.GET.get("type", 0))
+
         if self.selected_type == CollectionItem.LIVRO:
             return Book.objects.all()
         else:
@@ -25,7 +26,7 @@ class CollectionItemListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         context["collection_types"] = CollectionItem.COLLECTION_TYPES
         context["selected_type"] = self.selected_type
         return context
@@ -38,17 +39,17 @@ class CollectionItemListView(ListView):
 #     success_url = reverse_lazy("collection_item_list")
 
 
-class BookListView(LoginRequiredMixin, ListView):
-    model = [Book, CollectionItem]
-    template_name = "item/book_list.html"
+# class BookListView(LoginRequiredMixin, ListView):
+#     model = [Book, CollectionItem]
+#     template_name = "item/book_list.html"
 
-    def get_queryset(self):
-        return Book.objects.all()
+#     def get_queryset(self):
+#         return Book.objects.all()
 
 
-class EquipmentListView(LoginRequiredMixin, ListView):
-    model = Equipment
-    template_name = "item/equipment_list.html"
+# class EquipmentListView(LoginRequiredMixin, ListView):
+#     model = Equipment
+#     template_name = "item/equipment_list.html"
 
 
 class CollectionItemCreateView(LibrarianPermissionMixin, View):
@@ -113,24 +114,130 @@ class CollectionItemCreateView(LibrarianPermissionMixin, View):
 
 
 class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
-    model = CollectionItem
-    form_class = CollectionItemForm
     template_name = "collection_item/collectionitem_form.html"
+    fields = "__all__"
     success_url = reverse_lazy("collection_item_list")
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user  # necessário para o __init__ do form
-        return kwargs
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get("pk")
+        try:
+            # Tenta encontrar como Book primeiro
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            try:
+                # Se não encontrar como Book, tenta como Equipment
+                return Equipment.objects.get(pk=pk)
+            except Equipment.DoesNotExist:
+                # Se não encontrar em nenhum, retorna 404
+                messages.error("Item não encontrado")
+                return redirect(reverse_lazy("collection_item_list"))
 
-    def form_valid(self, form):
-        # Atualiza o responsável com base no usuário logado
-        nome_usuario = self.request.user.get_full_name() or self.request.user.username
-        form.instance.responsible_person = nome_usuario
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = self.get_object()
 
-        response = super().form_valid(form)
-        messages.success(self.request, "Item de Acervo atualizado com sucesso!")
-        return response
+        if isinstance(obj, Book):
+            context["item_form"] = CollectionItemForm(
+                instance=obj, user=self.request.user
+            )
+            context["book_form"] = BookForm(instance=obj)
+            context["equipment_form"] = EquipmentForm()
+        else:
+            context["item_form"] = CollectionItemForm(
+                instance=obj, user=self.request.user
+            )
+            context["book_form"] = BookForm()
+            context["equipment_form"] = EquipmentForm(instance=obj)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        item_form = CollectionItemForm(
+            request.POST, instance=self.object, user=request.user
+        )
+
+        if isinstance(self.object, Book):
+            child_form = BookForm(request.POST, instance=self.object)
+            other_form = EquipmentForm()
+        else:
+            child_form = EquipmentForm(request.POST, instance=self.object)
+            other_form = BookForm()
+
+        # Torna os campos do outro formulário não obrigatórios
+        for field in other_form.fields.values():
+            field.required = False
+
+        if item_form.is_valid() and child_form.is_valid():
+            item = item_form.save(commit=False)
+            item.save()
+
+            child = child_form.save(commit=False)
+            child.pk = item.pk
+            child.save()
+
+            messages.success(request, "Item de Acervo atualizado com sucesso!")
+            return redirect(self.success_url)
+        else:
+            messages.error(
+                request, "Erro ao atualizar! Por favor, verifique os campos."
+            )
+            context = self.get_context_data()
+            context["item_form"] = item_form
+            if isinstance(self.object, Book):
+                context["book_form"] = child_form
+            else:
+                context["equipment_form"] = child_form
+            return render(request, self.template_name, context)
+
+
+# class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
+#     model = CollectionItem
+#     form_class = CollectionItemForm
+#     template_name = "collection_item/collectionitem_form.html"
+#     success_url = reverse_lazy("collection_item_list")
+
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         # kwargs["user"] = self.request.user
+#         return kwargs
+
+#     def form_valid(self, form):
+#         response = super().form_valid(form)
+#         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
+#         return response
+
+
+# class BookUpdateView(LibrarianPermissionMixin, UpdateView):
+#     model = Book
+#     form_class = BookForm
+#     template_name = "collection_item/collectionitem_form.html"
+#     success_url = reverse_lazy("collection_item_list")
+
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         return kwargs
+
+#     def form_valid(self, form):
+#         response = super().form_valid(form)
+#         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
+#         return response
+
+
+# class EquipmentUpdateView(LibrarianPermissionMixin, UpdateView):
+#     model = Equipment
+#     form_class = EquipmentForm
+#     template_name = "collection_item/collectionitem_form.html"
+#     success_url = reverse_lazy("collection_item_list")
+
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         return kwargs
+
+#     def form_valid(self, form):
+#         response = super().form_valid(form)
+#         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
+#         return response
 
 
 class CollectionItemDeleteView(LibrarianPermissionMixin, DeleteView):

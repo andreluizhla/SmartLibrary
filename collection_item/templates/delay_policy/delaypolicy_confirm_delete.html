@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Exclusão de Multa{% endblock title %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url "home_page" %}">Início</a></li>
+    <li class="breadcrumb-item"><a href="{% url "delay_policy_list" %}">Política de Multa</a></li>
+    <li class="breadcrumb-item active">Excluir</li>
+</ol>
+{% endblock breadcrumbs %}
+
+{% block main_content %}
+<h1>Confirmar Exclusão de Multa</h1>
+<div>
+    <p><strong>ATENÇÃO:</strong> Você estará excluindo a seguinte multa:</p>
+    <p>Tipo de Usuário: <strong>{{delaypolicy.get_type_user_display}}</strong></p>
+    <p>Tipo de Acervo: <strong>{{delaypolicy.get_type_item_display}}</strong></p>
+    <p>Tempo Máximo de Empréstimo: <strong>{{delaypolicy.max_days}} dias</strong></p>
+    <p>Valor da multa: <strong>{{delaypolicy.fine_value_formatted}}</strong></p>
+    <p>Limite de Itens Simultâneos: <strong>{{delaypolicy.item_limits}} itens</strong></p>
+    {% if delaypolicy.delay_tolerance %}
+    <p>Tempo de Tolerância: <strong>{{delaypolicy.fine_value}}</strong></p>
+    {% endif %}
+</div>
+<form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-danger">Excluir</button>
+            <a href="{% url "delay_policy_list" %}" class="btn btn-primary">Voltar</a>
+        </form>
+{% endblock main_content %}

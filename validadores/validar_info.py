@@ -101,6 +101,20 @@ def validate_isbn(value):
     if not re.fullmatch(r"\d+", isbn):
         raise ValidationError("O ISBN não pode conter espaços, letras ou símbolos")
 
+def validate_fine_value(value):
+    fine_value = value
+    
+    if fine_value < 0:
+        raise ValidationError("Coloque um valor válido")
+    
+    # if fine_value > 100000:
+    #     raise ValidationError("MAIS DE R$ 100.000,00 PARA UM ITEM DE ACERVO???")
+
+def validate_upper_zero(value):
+    valor = value
+    
+    if valor < 1:
+        raise ValidationError("Coloque um valor maior que 0")
 
 ddd_list = [
     11,
