@@ -14,12 +14,16 @@
     <h1>Política de Multa {% if user.type_user == 2 %}
         <a href="{% url 'delay_policy_create' %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Cadastrar Multa"><i class="bi bi-plus-circle"></i></a>
     {% endif %}</h1>
+    <div class="btn-group mb-4">
+        {% for type_value, type_name in types_user_list %}
+            <a href="?user={{type_value}}" class="btn btn-sm {% if selected_type_user == type_value %}btn-primary{% else %}btn-outline-primary{% endif %}">{{type_name}}</a>
+        {% endfor %}
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-hover table-sm">
             <thead>
                 <tr>
-                    {% comment %} <th scope="col">ID</th> {% endcomment %}
-                    <th scope="col">USUÁRIO</th>
+                    <th scope="col">ID</th>
                     <th scope="col">ITEM</th>
                     <th scope="col">VALOR DA MULTA</th>
                     <th scope="col">PRAZO MÁXIMO</th>
@@ -33,21 +37,21 @@
             <tbody>
                 {% for item in delaypolicy_list %}
                     <tr>
-                        {% comment %} <td scope="row"> {{ item.id }} </td> {% endcomment %}
-                        <td scope="row"> {{ item.get_type_user_display }} </td>
+                        <td scope="row"> {{ item.id }} </td>
                         <td scope="row"> {{ item.get_type_item_display }} </td>
                         <td scope="row"> {{ item.fine_value_formatted }} </td>
                         <td scope="row"> {{ item.max_days }} dias </td>
-                        <td scope="row"> {{ item.item_limits }} dias </td>
+                        <td scope="row"> {{ item.item_limits }} itens </td>
                         <td scope="row"> {{ item.delay_tolerance_formatted|default:"-" }} </td>
-                        {% if user.type_user == 2 %}
-                            <td>
-                                <div class="btn-group">
-                                <a href="{% url "delay_policy_update" item.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
-                                <a href="{% url "delay_policy_delete" item.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
-                                </div>
-                            </td>
-                        {% endif %}
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url "delay_policy_detail" item.pk %}" class="btn btn-secondary btn-sm" data-bs-toggle="tooltip" data-bs-title="Informações da Multa"><i class="bi bi-info-lg"></i></a>
+                                {% if user.type_user == 2 %}
+                                    <a href="{% url "delay_policy_update" item.pk %}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+                                    <a href="{% url "delay_policy_delete" item.pk %}" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+                                {% endif %}
+                            </div>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -56,5 +60,10 @@
                     {% endfor %}
                 </tbody>
         </table>
+    </div>
+    <div class="alert alert-danger"><strong>Notas do Dev:</strong> 
+        <ol>
+            <li>Possível bug do time de Requisitos: Cenário 2</li>
+        </ol>
     </div>
 {% endblock main_content %}

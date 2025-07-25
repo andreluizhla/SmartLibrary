@@ -52,9 +52,7 @@
                     {% endif %}
                     <th>DISPONIBILIDADE</th>
                     <th>ESTADO</th>
-                    {% if user.type_user == 2 %}
                     <th>AÇÕES</th>
-                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -73,18 +71,19 @@
                     {% endif %}
                     <td>{{item.availability_display}}</td>
                     <td>{{item.preservation_display}}</td>
-                    {% if user.type_user == 2 %}
                     <td>
                         <div class="btn-group">
+                            <a href="{% url "collection_item_detail" pk=item.id %}" class="btn btn-secondary btn-sm" data-bs-toggle="tooltip" data-bs-title="Informações do Item"><i class="bi bi-info-lg"></i></a>
+                            {% if user.type_user == 2 %}
                             <a href="{% url 'collection_item_update' item.id %}" class="btn btn-sm btn-primary" title="Editar Item" data-bs-toggle="tooltip" data-bs-title="Editar Item">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <a href="{% url "collection_item_delete" item.id %}"class="btn btn-sm btn-danger" title="Excluir" data-bs-toggle="tooltip" data-bs-title="Excluir Item" >
                                 <i class="bi bi-trash"></i>
                             </a>
+                            {% endif %}
                         </div>
                     </td>
-                    {% endif %}
                 </tr>
                 {% empty %}
                 <tr>
@@ -100,3 +99,4 @@
         </div>
     </div>
 {% endblock main_content %}
+{% comment %} colocar os 2 tipos em um link só para paginação e filtragem por tipo {% endcomment %}

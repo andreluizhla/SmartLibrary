@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes Política de Multa{% endblock title %}
+
+{% block main_content %}
+<h1>Detalhes Política de Multa</h1>
+<p>Tipo de usuário: <strong>{{ delaypolicy_item.get_type_user_display }}</strong></p>
+<p>Tipo de Acervo: <strong>{{ delaypolicy_item.get_type_item_display }}</strong></p>
+<p>Valor da multa: <strong>{{ delaypolicy_item.fine_value_formatted }}</strong></p>
+<p>Prazo Máximo de Empréstimo: <strong>{{ delaypolicy_item.max_days }} dias</strong></p>
+<p>Limite de Itens por Tipo: <strong>{{ delaypolicy_item.item_limits }} itens</strong></p>
+{% if delaypolicy_item.delay_tolerance %}
+    <p>Limite de Tolerância: <strong>{{ delaypolicy_item.delay_tolerance_formatted }}</strong></p>
+{% endif %}
+
+<p>A multa se aplica para os seguintes {{delaypolicy_item.get_type_item_display}}:</p>
+<ul>
+    {% if delaypolicy_item.type_item == 0 %}  {# Livros #}
+        {% for book in book_list %}
+            <li>{{ book.title }}</li>
+        {% empty %}
+            <li>Nenhum livro cadastrado com esta política</li>
+        {% endfor %}
+    {% else %}  {# Equipamentos #}
+        {% for equipment in equipment_list %}
+            {% if equipment.type == delaypolicy_item.type_item %}
+                <li>{{ equipment.brand }} ({{ equipment.serial_number }})</li>
+            {% endif %}
+        {% empty %}
+            <li>Nenhum equipamento cadastrado com esta política</li>
+        {% endfor %}
+    {% endif %}
+</ul>
+{% endblock main_content %}

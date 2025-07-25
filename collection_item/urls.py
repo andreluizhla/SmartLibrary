@@ -5,8 +5,7 @@ from .views import (
     CollectionItemDeleteView,
     CollectionItemListView,
     CollectionItemUpdateView,
-    # BookUpdateView,
-    # EquipmentUpdateView,
+    CollectionItemDetailView,
     # ItemHistory
     # ItemHistoryView,
     # DelayPolicy
@@ -14,6 +13,7 @@ from .views import (
     DelayPolicyCreateView,
     DelayPolicyUpdateView,
     DelayPolicyDeleteView,
+    DelayPolicyDetail,
 )
 
 urlpatterns = [
@@ -21,7 +21,6 @@ urlpatterns = [
     path(
         "",
         CollectionItemListView.as_view(),
-        {"type": 0},
         name="collection_item_list",
     ),
     # path("<int:type>/", CollectionItemListView.as_view(), name="collection_item_list"),
@@ -42,17 +41,11 @@ urlpatterns = [
         CollectionItemDeleteView.as_view(),
         name="collection_item_delete",
     ),
-    # URL Collection Item
-    # path(
-    #     "book",
-    #     BookListView.as_view(),
-    #     name="book_list",
-    # ),
-    # path(
-    #     "equipment",
-    #     EquipmentListView.as_view(),
-    #     name="equipment_list",
-    # ),
+    path(
+        "detail/<str:pk>",
+        CollectionItemDetailView.as_view(),
+        name="collection_item_detail",
+    ),
     # URLS do ItemHistory
     # path(
     #     "history",
@@ -79,5 +72,10 @@ urlpatterns = [
         "delay-policy/delete/<str:pk>",
         DelayPolicyDeleteView.as_view(),
         name="delay_policy_delete",
+    ),
+    path(
+        "delay-policy/detail/<str:pk>",
+        DelayPolicyDetail.as_view(),
+        name="delay_policy_detail",
     ),
 ]

@@ -13,7 +13,7 @@
     {% if user_list %}
     <div class="btn-group mb-4" role="group">
         {% for type_value, type_name in user_types_list %}
-            <a href="?user_type={{type_value}}" class="btn {% if selected_type == type_value %}btn-primary{% else %}btn-outline-primary{% endif %}">{{type_name}}</a>
+            <a href="?user_type={{type_value}}" class="btn btn-sm {% if selected_type == type_value %}btn-primary{% else %}btn-outline-primary{% endif %}">{{type_name}}</a>
         {% endfor %}
     </div>
     <div class="table-responsive">

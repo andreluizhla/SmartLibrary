@@ -14,7 +14,7 @@
 {% endblock breadcrumbs %}
 
 {% block main_content %}
-    <h1>{% if collectionitem.pk %}Editar{% else %}Cadastrar{% endif %} Item de Acervo</h1>
+    <h1>{% if book.pk or equipment.pk %}Editar{% else %}Cadastrar{% endif %} {% if book.pk %}Livro{% elif equipment.pk %}Equipamento{% else %}Item de Acervo{%endif%}</h1>
     <form method="POST">
         {% csrf_token %}
     {% if form %}
@@ -30,8 +30,12 @@
     {% endif %}
         <button type="submit" class="btn btn-primary button-jump" data-bs-toggle="tooltip" data-bs-title="Salvar Item"><i class="bi bi-floppy"></i></button>
         <a href="{% url 'collection_item_list' %}" class="btn btn-secondary button-jump" data-bs-toggle="tooltip" data-bs-title="Cancelar"><i class="bi bi-arrow-left-circle"></i></a>
-        {% if collectionitem.pk %}
-            <a href="{% url 'collection_item_delete' collectionitem.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        {% if book.pk %}
+        <a href="{% url 'collection_item_delete' book.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        {% elif equipment.pk %}
+        <a href="{% url 'collection_item_delete' equipment.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a>
+        {% comment %} {% else %}
+        <a href="{% url 'collection_item_delete' collectionitem_list.pk %}" class="btn btn-danger button-jump" data-bs-toggle="tooltip" data-bs-title="Excluir"><i class="bi bi-trash"></i></a> {% endcomment %}
         {% endif %}
     </form>
     <script>

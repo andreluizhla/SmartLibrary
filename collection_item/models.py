@@ -74,7 +74,7 @@ class CollectionItem(models.Model):
     class Meta:
         verbose_name = "Item do Acervo"
         verbose_name_plural = "Itens do Acervo"
-        ordering = ["type"]
+        ordering = ["type", "availability", "preservation"]
 
     def preservation_display(self):
         return self.ESTADO_CONSEVACAO.get(self.preservation, "Desconhecido")
@@ -139,10 +139,10 @@ class Equipment(CollectionItem):
 
 
 class DelayPolicy(models.Model):
-    TIPOS_USUARIOS = {
-        User.LEITOR: "Leitor",
-        User.FUNCIONARIO: "Funcionário",
-    }
+    TIPOS_USUARIOS = [
+        (User.LEITOR, "Leitor"),
+        (User.FUNCIONARIO, "Funcionário"),
+    ]
     type_user = models.PositiveSmallIntegerField(
         verbose_name="Tipo de Usuário",
         choices=TIPOS_USUARIOS,
@@ -191,13 +191,6 @@ class DelayPolicy(models.Model):
         verbose_name = "Política de Multa e Atrazo"
         verbose_name_plural = "Políticas de Multas e Atrazos"
         ordering = ["type_user", "type_item"]
-
-    def clean(self):
-        super().clean()
-        if DelayPolicy.objects.filter(
-            type_user=self.type_user, type_item=self.type_item
-        ).exists():
-            raise ValidationError("Essa multa já existe!")
 
     def fine_value_formatted(self):
         return "R$ " + str(self.fine_value).replace(".", ",")

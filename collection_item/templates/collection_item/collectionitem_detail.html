@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes{% endblock title %}
+
+{% block main_content %}
+<h1>Detalhes do Item</h1>
+<p>Tipo: <strong>{{ item.get_type_display }}</strong></p>
+<p>Disponibilidade: <strong>{{ item.get_availability_display }}</strong></p>
+<p>Estado: <strong>{{ item.get_preservation_display }}</strong></p>
+
+{% if item.type == 0 %}  {# Livro #}
+    <h2>Detalhes do Livro</h2>
+    <p>Título: <strong>{{ specific_item.title }}</strong></p>
+    <p>Autor: <strong>{{ specific_item.author }}</strong></p>
+    <p>Editora: <strong>{{ specific_item.publisher }}</strong></p>
+    <p>Ano de Publicação: <strong>{{ specific_item.year_pub }}</strong></p>
+    <p>ISBN: <strong>{{ specific_item.isbn_display }}</strong></p>
+{% else %}  {# Equipamento #}
+    <h2>Detalhes do Equipamento</h2>
+    <p>Número de Série: <strong>{{ specific_item.serial_number }}</strong></p>
+    <p>Marca/Modelo: <strong>{{ specific_item.brand }}</strong></p>
+    <p>Especificações: <strong>{{ specific_item.specifications }}</strong></p>
+{% endif %}
+
+<h2>Políticas de Atraso Aplicáveis</h2>
+{% if delaypolicy_list %}
+    <ul>
+    {% for policy in delaypolicy_list %}
+        <li>
+            Política #{{ policy.pk }} - 
+            Tipo de Usuário: <strong>{{ policy.get_type_user_display }}</strong> -
+            Valor da multa: <strong>{{ policy.fine_value_formatted }}</strong> - 
+            Prazo: <strong>{{ policy.max_days }} dias</strong>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Não há políticas de atraso cadastradas para este tipo de item.</p>
+{% endif %}
+{% endblock main_content %}

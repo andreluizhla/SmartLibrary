@@ -18,10 +18,9 @@
         <div class="d-grid gap-3 text-center ">
             {% if user.type_user == 2 %}
                 <a href="{% url "user_list" %}" class="btn btn-primary btn-md col-5 p-2 mx-auto">Lista de Usuários</a>
+                <a href="{% url "delay_policy_list" %}" class="btn btn-primary btn-md col-5 p-2 mx-auto">Políticas de Multas e Atrazos</a>
             {% endif %}
             <a href="{% url "collection_item_list" %}" class="btn btn-primary btn-md col-5 p-2 mx-auto">Lista de Itens de Acervos</a>
-            {% comment %} <a href="{% url "collection_list" %}" class="btn btn-primary btn-md col-5 p-2 mx-auto">Lista de Acervos</a> {% endcomment %}
-            {% comment %} <a href="{% url "work_list" %}" class="btn btn-primary btn-md col-5 p-2 mx-auto">Lista de Obras</a> {% endcomment %}
             {% comment %} {% if user.type_user == 2 %}
                 <a href="{% url "collection_item_history" %}" class="btn btn-primary btn-md col-5 p-2 mx-auto">Histórico de Edições</a>
             {% endif %} {% endcomment %}

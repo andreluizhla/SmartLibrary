@@ -1,13 +1,42 @@
-from django.views.generic import ListView, CreateView, DeleteView, UpdateView, View
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+    View,
+    DetailView,
+)
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import CollectionItemForm, BookForm, EquipmentForm
+from .forms import CollectionItemForm, BookForm, EquipmentForm, DelayPolicyForm
 from .models import CollectionItem, DelayPolicy, Equipment, Book
 from user.views import LibrarianPermissionMixin
+from user.models import User
+
+
+class CollectionItemDetailView(LibrarianPermissionMixin, DetailView):
+    model = CollectionItem
+    context_object_name = "item"
+    template_name = "collection_item/collectionitem_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        item = self.object
+
+        # Carrega o objeto específico (Book ou Equipment)
+        if item.type == CollectionItem.LIVRO:
+            context["specific_item"] = Book.objects.get(pk=item.pk)
+        else:
+            context["specific_item"] = Equipment.objects.get(pk=item.pk)
+
+        # Filtra políticas por tipo de item
+        context["delaypolicy_list"] = DelayPolicy.objects.filter(type_item=item.type)
+
+        return context
 
 
 # CRUD CollectionList
@@ -30,26 +59,6 @@ class CollectionItemListView(LoginRequiredMixin, ListView):
         context["collection_types"] = CollectionItem.COLLECTION_TYPES
         context["selected_type"] = self.selected_type
         return context
-
-
-# class CollectionItemCreateView(LibrarianPermissionMixin, CreateView):
-#     model = CollectionItem
-#     form_class = CollectionItemForm
-#     template_name = "collection_item/collection_item/collectionitem_form.html"
-#     success_url = reverse_lazy("collection_item_list")
-
-
-# class BookListView(LoginRequiredMixin, ListView):
-#     model = [Book, CollectionItem]
-#     template_name = "item/book_list.html"
-
-#     def get_queryset(self):
-#         return Book.objects.all()
-
-
-# class EquipmentListView(LoginRequiredMixin, ListView):
-#     model = Equipment
-#     template_name = "item/equipment_list.html"
 
 
 class CollectionItemCreateView(LibrarianPermissionMixin, View):
@@ -191,55 +200,6 @@ class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
             return render(request, self.template_name, context)
 
 
-# class CollectionItemUpdateView(LibrarianPermissionMixin, UpdateView):
-#     model = CollectionItem
-#     form_class = CollectionItemForm
-#     template_name = "collection_item/collectionitem_form.html"
-#     success_url = reverse_lazy("collection_item_list")
-
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         # kwargs["user"] = self.request.user
-#         return kwargs
-
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
-#         return response
-
-
-# class BookUpdateView(LibrarianPermissionMixin, UpdateView):
-#     model = Book
-#     form_class = BookForm
-#     template_name = "collection_item/collectionitem_form.html"
-#     success_url = reverse_lazy("collection_item_list")
-
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         return kwargs
-
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
-#         return response
-
-
-# class EquipmentUpdateView(LibrarianPermissionMixin, UpdateView):
-#     model = Equipment
-#     form_class = EquipmentForm
-#     template_name = "collection_item/collectionitem_form.html"
-#     success_url = reverse_lazy("collection_item_list")
-
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         return kwargs
-
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, "Item de Acervo atualizado com sucesso!")
-#         return response
-
-
 class CollectionItemDeleteView(LibrarianPermissionMixin, DeleteView):
     model = CollectionItem
     template_name = "collection_item/collectionitem_confirm_delete.html"
@@ -270,11 +230,21 @@ class CollectionItemDeleteView(LibrarianPermissionMixin, DeleteView):
 class DelayPolicyListView(LibrarianPermissionMixin, ListView):
     model = DelayPolicy
     template_name = "delay_policy/delaypolicy_list.html"
+    
+    def get_queryset(self):
+        self.selected_type_user = int(self.request.GET.get("user", 0))
+        
+        return DelayPolicy.objects.filter(type_user=self.selected_type_user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["types_user_list"] = DelayPolicy.TIPOS_USUARIOS
+        context["selected_type_user"] = self.selected_type_user
+        return context
 
 
 class DelayPolicyCreateView(LibrarianPermissionMixin, CreateView):
-    model = DelayPolicy
-    fields = "__all__"
+    form_class = DelayPolicyForm
     template_name = "delay_policy/delaypolicy_form.html"
     success_url = reverse_lazy("delay_policy_list")
 
@@ -286,7 +256,7 @@ class DelayPolicyCreateView(LibrarianPermissionMixin, CreateView):
 
 class DelayPolicyUpdateView(LibrarianPermissionMixin, UpdateView):
     model = DelayPolicy
-    fields = "__all__"
+    form_class = DelayPolicyForm
     template_name = "delay_policy/delaypolicy_form.html"
     success_url = reverse_lazy("delay_policy_list")
 
@@ -305,3 +275,23 @@ class DelayPolicyDeleteView(LibrarianPermissionMixin, DeleteView):
         response = super().form_valid(form)
         messages.success(self.request, "Política de Atraso excluída com sucesso!")
         return response
+
+
+class DelayPolicyDetail(LibrarianPermissionMixin, DetailView):
+    model = DelayPolicy
+    template_name = "delay_policy/delaypolicy_detail.html"
+    context_object_name = "delaypolicy_item"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        policy = self.object
+
+        # Filtra os itens pelo tipo da política
+        if policy.type_item == CollectionItem.LIVRO:
+            context["book_list"] = Book.objects.all()
+            context["equipment_list"] = []
+        else:
+            context["equipment_list"] = Equipment.objects.filter(type=policy.type_item)
+            context["book_list"] = []
+
+        return context

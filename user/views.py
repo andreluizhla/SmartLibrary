@@ -28,8 +28,8 @@ from .models import User, UserChangeLog
 
 
 @login_required
-def home_page(request):
-    return render(request, "user/home_page.html")
+def home(request):
+    return render(request, "home.html")
 
 
 # Classe para permitir apenas usuários logados como Bibliotecário ou ADM
