@@ -137,3 +137,12 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# Project #
+collection/migrations/__pycache__
+collection_item/__pycache__
+collection_item/migrations/__pycache__
+setup/__pycache__
+user/__pycache__
+user/migrations/__pycache__
+validadores/__pycache__
