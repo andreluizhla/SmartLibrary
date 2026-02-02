@@ -139,6 +139,7 @@ GitHub.sublime-settings
 .history
 
 # Project #
+collection/__pycache__
 collection/migrations/__pycache__
 collection_item/__pycache__
 collection_item/migrations/__pycache__
